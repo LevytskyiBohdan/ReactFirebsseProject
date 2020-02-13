@@ -7,12 +7,7 @@ import ShowPosts from './ShowPosts';
 import '../css/Home.css';
 
 class Home extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        console.log(this.props.articles)
         return (<>
             <div className="container-fluid home">
                 <div className="row">

@@ -27,18 +27,15 @@ export const HIDE_MODAL = 'HIDE_POPAP';
 
 export const CREAR_USER_ERROR = 'CREAR_USER_ERROR';
 
-export const SET_ERROR = 'SET_ERROR';
-export const CLEAR_ERROR = 'CLEAR_ERROR';
-
 // --------------------FirebaseDB
 
-export const GET_DATA = 'GET_DATA';
-export const GET_DATA_SUCCESS = 'GET_DATA_SUCCESS';
-export const GET_DATA_FAILURE = 'GET_DATA_FAILURE';
+export const GET_POSTS = 'GET_POSTS';
+export const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
+export const GET_POSTS_FAILURE = 'GET_POSTS_FAILURE';
 
-export const CREATE_DATA = 'CREATE_DATA';
-export const CREATE_DATA_SUCCESS = 'CREATE_DATA_SUCCESS';
-export const CREATE_DATA_FAILURE = 'CREATE_DATA_FAILURE';
+export const CREATE_POST = 'CREATE_POST';
+export const CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS';
+export const CREATE_POST_FAILURE = 'CREATE_POST_FAILURE';
 
 export const GET_POST = 'GET_POST';
 export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';

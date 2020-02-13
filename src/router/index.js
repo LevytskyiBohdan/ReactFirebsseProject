@@ -7,6 +7,7 @@ import ModalView from '../views/ModalView';
 import Home from '../components/Home';
 import About from '../components/About';
 import Archive from '../components/Archive';
+import PostDetails from '../components/PostDetails';
 import UserPageView from '../views/UserPageView';
 
 export default (
@@ -18,10 +19,12 @@ export default (
                 <Route exact path="/" render={Home} />
                 <Route exact path="/about" render={About} />
                 <Route exact path="/archive" render={Archive} />
+                <Route exact path="/post/:id" render={PostDetails} />
                 <ProtectedRoutes path="/user" render={UserPageView} />
                 <ProtectedRoutes path="/user/createPost" render={UserPageView} />
                 <ProtectedRoutes path="/user/deleteAccount" render={UserPageView} />
                 <ProtectedRoutes path="/user/myPosts" render={UserPageView} />
+                <ProtectedRoutes path="user/post/:id" render={PostDetails} />
                 <Route  render={() => (<div><h1>404</h1></div>)} />
             </Switch>
         </>

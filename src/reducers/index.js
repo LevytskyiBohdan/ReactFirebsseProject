@@ -3,6 +3,7 @@ import { connectRouter } from 'connected-react-router';
 import user from './user';
 import modal from './modal';
 import posts from './posts';
+import post from './post';
 import fileUpload from './fileUpload';
 
 const createRootReducer = (history) => combineReducers({
@@ -10,6 +11,7 @@ const createRootReducer = (history) => combineReducers({
   user,
   modal,
   posts,
+  post,
   fileUpload,
 });
 export default createRootReducer

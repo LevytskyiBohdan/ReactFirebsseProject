@@ -4,9 +4,10 @@ import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
+import * as postActions from '../actions/post';
 import * as fileUploadActions from '../actions/fileUpload';
 import FileUploader from './FileUploader';
-import { CREATE_DATA_SUCCESS } from '../constants';
+import { CREATE_POST_SUCCESS } from '../constants';
 
 class UserPageCreatePost extends React.Component {
     constructor(props) {
@@ -21,9 +22,9 @@ class UserPageCreatePost extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.postsActions.status === CREATE_DATA_SUCCESS) {
+        if (this.props.posts.status === CREATE_POST_SUCCESS) {
             this.props.fileUploadActions.clearFileUploader();
-            this.props.postsActions.getData('posts');
+            this.props.postsActions.getPosts('posts');
 
             this.setState({
                 title: '',
@@ -53,7 +54,7 @@ class UserPageCreatePost extends React.Component {
             email: this.props.user.email,
         }
 
-        this.props.postsActions.createData(date);
+        this.props.postActions.createPost(date);
     }
 
     render() {
@@ -77,6 +78,7 @@ class UserPageCreatePost extends React.Component {
                         placeholder="text..."
                         value={this.state.article}
                         onChange={evt => { this.setState({ article: evt.target.value }) }}
+                        style={{height: "35vh"}}
                     ></textarea>
 
                 </div>
@@ -105,6 +107,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
     postsActions: bindActionCreators(postsActions, dispatch),
+    postActions: bindActionCreators(postActions, dispatch),
     fileUploadActions: bindActionCreators(fileUploadActions, dispatch),
 });
 
