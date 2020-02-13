@@ -1,0 +1,7 @@
+.home .top  {
+    background: url('../static/9_Blog_Layout_Best_Practices_From_2017.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 35vh;
+    margin-bottom: 20px;
+}

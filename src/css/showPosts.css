@@ -1,0 +1,9 @@
+.posts .card-text{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 10vh;
+}
+
+.posts img {
+    height: 150px;
+}
