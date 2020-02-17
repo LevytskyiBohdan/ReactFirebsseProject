@@ -15,10 +15,19 @@ class LikePost extends React.Component {
 
         this.state = {
             isShowMessage: false,
+            message: ''
         }
     }
 
     onClick(status) {
+        if (!this.props.currentUser) {
+            this.setState({
+                isShowMessage: true,
+                message: 'You should be authorized.'
+            })
+            return null;
+        }
+
         const likes = this.props.likes;
         const currentEmail = this.props.currentUser.email;
 
@@ -52,6 +61,7 @@ class LikePost extends React.Component {
         } else {
             this.setState({
                 isShowMessage: true,
+                message: 'You have liked this yet.',
             })
         }
     }
@@ -60,7 +70,7 @@ class LikePost extends React.Component {
         return (<>
             <form className="likeBlock">
                 { this.state.isShowMessage &&
-                    <InfoMessage message="You have liked this yet."/>
+                    <InfoMessage message={ this.state.message }/>
                 }
                 
                 <div className="form-group">
