@@ -1,0 +1,29 @@
+.likeBlock {
+    margin: 10px;
+}
+
+.likeBlock .like {
+    background: url(../static/thumbs-up-regular.svg);
+}
+
+.likeBlock .unlike {
+    background: url(../static/thumbs-down-regular.svg);
+}
+
+.likeBlock .like, .likeBlock .unlike {
+    background-repeat: no-repeat;
+    background-size: 100% 80%;
+    background-position: 50%;
+}
+
+.likeBlock .form-group {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.likeBlock button {
+    width: 30%;
+    height: 30px;
+}

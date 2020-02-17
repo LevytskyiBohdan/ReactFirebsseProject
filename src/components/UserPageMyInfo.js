@@ -4,19 +4,48 @@ import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
-import ShowPosts from './ShowPosts';
+import * as modalActions from '../actions/modal';
+import ConfirmDeleteUser from './ConfirmDeleteUser';
+import Modal from './Modal';
+import UserEditForm from './UserEditForm';
 
 class UserPageMyInfo extends React.Component {
-    renderPosts() {
-        let newData = [];
+    componentDidMount() {
+        this.props.userActions.getCurrentUser();
+    }
 
-        this.props.articles.map(article => {
-            if (article.email === this.props.user.email) {
-                newData.push(article);
-            }
-        })
+    deleteUser() {
+        this.props.modalActions.showModal(
+            <Modal
+                content={<ConfirmDeleteUser
+                    title="Do you want delete your account?"
+                    button="Delete"
+                    actionData={null}
+                    action={this.props.userActions.deleteUser}
+                />}
+                title="Login" closeAction={[
+                    this.props.modalActions.hideModal,
+                    this.props.userActions.clearUserError
+                ]} />
 
-        return <ShowPosts articles={newData} />
+        );
+    }
+
+    editUser() {
+        this.props.modalActions.showModal(
+            <Modal
+                content={<UserEditForm
+                    title="Do you want delete your account?"
+                    button="Delete"
+                    actionData={null}
+                    action={this.props.userActions.deleteUser}
+                />}
+                title="Login" closeAction={[
+                    this.props.modalActions.hideModal,
+                    this.props.userActions.clearUserError
+                ]} />
+
+        );
     }
 
     render() {
@@ -30,6 +59,22 @@ class UserPageMyInfo extends React.Component {
                     <h3>{this.props.user.displayName}</h3>
                     <h5>Last sign-in time: <small className="text-muted">{this.props.user.metadata.lastSignInTime}</small></h5>
                     <h6>Email: {this.props.user.email}</h6>
+                    <div className="form-group">
+                        <button
+                            type="button"
+                            className="btn btn-warning mt-3"
+                            onClick={() => { this.editUser() }}
+                        >Edit user</button>
+                    </div>
+
+                    <div className="form-group">
+                        <button
+                            type="button"
+                            className="btn btn-danger mt-3"
+                            onClick={() => { this.deleteUser() }}
+                        >Delete my account</button>
+                    </div>
+
                 </div>
 
             </div>
@@ -45,6 +90,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
     postsActions: bindActionCreators(postsActions, dispatch),
+    modalActions: bindActionCreators(modalActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserPageMyInfo));

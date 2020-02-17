@@ -3,10 +3,15 @@ import { connect } from 'react-redux';
 import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../actions/user';
+import * as postsActions from '../actions/posts';
 import ShowPosts from './ShowPosts';
 import '../css/Home.css';
 
 class Home extends React.Component {
+    componentDidMount() {
+        this.props.postsActions.getPosts('posts');
+    }
+    
     render() {
         return (<>
             <div className="container-fluid home">
@@ -15,7 +20,7 @@ class Home extends React.Component {
                 </div>
                 <div className="row">
                     {this.props.articles &&
-                        <ShowPosts articles={this.props.articles} />
+                        <ShowPosts />
                     }
                 </div>
             </div>
@@ -29,6 +34,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
+    postsActions: bindActionCreators(postsActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route } from 'react-router-dom';
@@ -9,16 +10,16 @@ import { FILE_UPLOAD_SUCCESS, FILE_UPLOAD_FAILURE } from '../constants';
 
 class FileUploader extends React.Component {
     componentDidUpdate(prevProps) {
-        if(prevProps.clear !== this.props.clear) {
+        if (prevProps.clear !== this.props.clear) {
             this.refs.fileUploader.value = '';
         }
     }
-    
+
     onChange(files) {
         this.props.fileUploadActions.fileUpload(files, this.props.path)
     }
 
-    setLabel() {
+    renderLabel() {
         switch (this.props.status) {
             case FILE_UPLOAD_SUCCESS:
                 return "Files uploaded"
@@ -29,26 +30,33 @@ class FileUploader extends React.Component {
         }
     }
 
+    renderStatus() {
+        switch (this.props.status) {
+            case FILE_UPLOAD_SUCCESS:
+                return <small className="form-text text-muted mt-3 mb-3">All files were uploaded.</small>
+            case FILE_UPLOAD_FAILURE:
+                return <small className="form-text text-muted">Something was wrong.</small>
+        }
+    }
+
     render() {
-        return (
-            <div className="custom-file">
-                <input
-                    multiple
-                    type="file"
-                    ref="fileUploader"
-                    className="custom-file-input"
-                    id="file"
-                    onChange={evt => { this.onChange(evt.target.files) }}
-                />
-                <label className="custom-file-label" htmlFor="file">
-                    {this.setLabel()}
-                
-                </label>
-                
-                { this.props.filesURI &&
-                    <small className="form-text text-muted">All files were uploaded</small>
-                }
-            </div>
+        return (<>
+
+            <input
+                multiple
+                type="file"
+                ref="fileUploader"
+                className="custom-file-input"
+                id="file"
+                onChange={evt => { this.onChange(evt.target.files) }}
+            />
+            <label className="custom-file-label" htmlFor="file">
+                {this.renderLabel()}
+
+            </label>
+
+            {this.renderStatus()}
+        </>
         )
     }
 }

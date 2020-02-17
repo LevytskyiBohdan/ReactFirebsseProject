@@ -4,9 +4,11 @@ import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
 import * as userActions from '../actions/user';
+import * as postsActions from '../actions/posts';
+import * as postActions from '../actions/post';
 import UserPageSideBar from '../components/UserPageSideBar';
 import UserPageDelete from '../components/UserPageDelete';
-import UserPageCreatePost from '../components/UserPageCreatePost';
+import UserPagePost from '../components/UserPagePost';
 import UserPageMyPosts from '../components/UserPageMyPosts';
 import UserPageMyInfo from '../components/UserPageMyInfo';
 
@@ -19,7 +21,7 @@ class UserPageView extends React.Component {
     getCurrentPage() {
         switch (this.props.location) {
             case "/user/createPost":
-                return <UserPageCreatePost />;
+                return <UserPagePost actionType="create"/>;
             case "/user/deleteAccount":
                 return <UserPageDelete />;
             case "/user/myPosts":
@@ -56,6 +58,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     push: path => dispatch(push(path)),
     userActions: bindActionCreators(userActions, dispatch),
+    postsActions: bindActionCreators(postsActions, dispatch),
+    postActions: bindActionCreators(postActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserPageView));

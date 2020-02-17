@@ -92,8 +92,7 @@ class SigninForm extends React.Component {
                         onChange={evt => { this.setState({ name: evt.target.value }) }}
                     />
                 </div>
-                <div className="form-group">
-                    <label>Your photo</label>
+                <div className="custom-file mb-4">
                     <FileUploader path="usersIMG"/>
                 </div>
 

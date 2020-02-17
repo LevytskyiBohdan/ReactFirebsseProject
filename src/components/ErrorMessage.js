@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 class ErrorMessage extends React.Component {
     render() {
         const error = this.props.error;
-        console.log(!!error)
         return (error && error !== "GET_USER_FAILURE" &&
         <>
             <div className="alert alert-danger" role="alert">

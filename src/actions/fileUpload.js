@@ -3,6 +3,7 @@ import {
     FILE_UPLOAD_SUCCESS,
     FILE_UPLOAD_FAILURE,
     CLEAR_FILE_UPLOADER,
+    DELETE_FILE_FROM_UPLOADED,
 } from '../constants';
 
 import { firebaseFileUpload } from '../utils/firebaseStorage';
@@ -25,3 +26,6 @@ export function fileUpload(files, path) {
 }
 
 export const clearFileUploader = () => ({ type: CLEAR_FILE_UPLOADER });
+
+export const deleteFileFromUploaded = idx => ({ type: DELETE_FILE_FROM_UPLOADED, payload: idx });
+

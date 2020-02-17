@@ -12,8 +12,8 @@ class UserPageSideBar extends React.Component {
         return (
                 <div className="col-3">
                     <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <Link className={`nav-link ${location==='/user' ? 'active': null}`} to="/user" >My Info</Link>
                         <Link className={`nav-link ${location==='/user/createPost' ? 'active': null}`} to="/user/createPost">Create Post</Link>
-                        <Link className={`nav-link ${location==='/user/deleteAccount' ? 'active': null}`} to="/user/deleteAccount" >Delete Account</Link>
                         <Link className={`nav-link ${location==='/user/myPosts' ? 'active': null}`} to="/user/myPosts" >My Posts</Link>
                     </div>
                 </div>

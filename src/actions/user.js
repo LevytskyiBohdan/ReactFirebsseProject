@@ -110,10 +110,10 @@ const deleteUserReq = () => ({ type: DELETE_USER });
 const deleteUserSuccess = response => ({ type: DELETE_USER_SUCCESS, payload: response });
 const deleteUserError = err => ({ type: DELETE_USER_FAILURE, payload: err });
 
-export function deleteUser() {
+export function deleteUser(data) {
     return dispatch => {
         dispatch(deleteUserReq());
-        firebaseDeleteUser()
+        firebaseDeleteUser(data)
         .then(response => {
             dispatch(deleteUserSuccess(response));
         }).catch(err => {

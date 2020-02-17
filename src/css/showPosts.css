@@ -7,3 +7,9 @@
 .posts img {
     height: 150px;
 }
+
+.posts h5 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

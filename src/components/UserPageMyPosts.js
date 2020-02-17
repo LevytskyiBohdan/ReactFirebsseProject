@@ -7,6 +7,10 @@ import * as postsActions from '../actions/posts';
 import ShowPosts from './ShowPosts';
 
 class UserPageMyPosts extends React.Component {
+    componentDidMount() {
+        this.props.postsActions.getPosts('posts');
+    }
+    
     renderPosts() {
         let newData = [];
 
@@ -16,7 +20,9 @@ class UserPageMyPosts extends React.Component {
             }
         })
 
-        return <ShowPosts articles={newData} />
+        return <ShowPosts 
+            isShowEditBlock={true}
+            articles={newData} />
     }
 
     render() {

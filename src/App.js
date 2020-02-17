@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as userActions from './actions/user';
 import * as postsActions from './actions/posts';
-import PostDetails from './components/PostDetails';
 
 import './App.css';
 
@@ -13,7 +12,7 @@ class App extends React.Component {
     this.props.userActions.getCurrentUser();
     this.props.postsActions.getPosts('posts');
   }
-
+  
   render() {
     console.log(this.props)
     return (
