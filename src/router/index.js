@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import ModalView from '../views/ModalView';
 import Home from '../components/Home';
 import About from '../components/About';
-import Archive from '../components/Archive';
 import PostDetails from '../components/PostDetails';
 import UserPageView from '../views/UserPageView';
 
@@ -18,7 +17,6 @@ export default (
             <Switch>
                 <Route exact path="/" render={Home} />
                 <Route exact path="/about" render={About} />
-                <Route exact path="/archive" render={Archive} />
                 <Route exact path="/post/:id" render={PostDetails} />
                 <ProtectedRoutes path="/user" render={UserPageView} />
                 <ProtectedRoutes path="/user/createPost" render={UserPageView} />

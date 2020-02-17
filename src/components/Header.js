@@ -35,9 +35,6 @@ class Header extends React.Component {
                                     <li className="nav-item active">
                                         <Link className="nav-link" to="/about">About</Link>
                                     </li>
-                                    <li className="nav-item active">
-                                        <Link className="nav-link" to="/archive">Archive</Link>
-                                    </li>
                                 </ul>
                                 <form className="form-inline my-2 my-lg-0">
                                     <ul className="navbar-nav">
