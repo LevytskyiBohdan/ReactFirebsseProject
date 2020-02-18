@@ -22,11 +22,13 @@ class UserPagePost extends React.Component {
             title: this.props.title || '',
             article: this.props.article || '',
             clearUploader: false,
+            publish: this.props.publish,
             isCreating: false,
         }
     }
 
     componentDidUpdate(prevProps) {
+        console.log(this.state.publish)
         if (this.props.posts.collection !== prevProps.posts.collection) {
             this.props.fileUploadActions.clearFileUploader();
             this.props.modalActions.hideModal();
@@ -57,16 +59,18 @@ class UserPagePost extends React.Component {
             img: this.props.filesURI,
             article: this.state.article,
             email: this.props.user.email,
+            userUid: this.props.user.uid,
+            publish: this.state.publish,
             likes: {
                 count: 0,
                 users: [],
             },
-            usersWhoLike: [],
         }
+        console.log(date)
 
         if (this.props.actionType === "create") {
             this.props.postsActions.createPost(date);
-        } 
+        }
         else if (this.props.actionType === "edit") {
             this.props.postsActions.editPost(Object.assign(
                 date,
@@ -81,17 +85,18 @@ class UserPagePost extends React.Component {
     showStatusMessage() {
         switch (this.props.posts.status) {
             case CREATE_POST_SUCCESS:
-                return <InfoMessage message="Post was created."/>;
+                return <InfoMessage message="Post was created." />;
             case CREATE_POST_FAILURE:
-                return <ErrorMessage error={this.props.posts.error}/>
+                return <ErrorMessage error={this.props.posts.error} />
 
         }
     }
 
     render() {
+        console.log(this.state.publish)
         return (
             <form>
-                { this. showStatusMessage() }
+                {this.showStatusMessage()}
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
@@ -120,17 +125,30 @@ class UserPagePost extends React.Component {
                         <FileUploader clear={this.state.clearUploader} path="posts" />
                     </div>
                 </div>
-                
+
+                <div className="form-group form-check">
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={this.state.publish}
+                        id="publish"
+                        onChange={()=> { this.setState({
+                            publish: !this.state.publish,
+                        })}}
+                        />
+                    <label className="form-check-label" htmlFor="publish">Publish post</label>
+                </div>
+
                 <div className="form-group">
                     <button
                         type="button"
-                        className={`btn btn-block mt-3 ${ this.props.actionType === "create" ? "btn-success" : "btn-warning" }`}
+                        className={`btn btn-block mt-3 ${this.props.actionType === "create" ? "btn-success" : "btn-warning"}`}
                         disabled={this.state.isCreating}
                         onClick={() => { this.onSubmit() }}
-                    >{ this.props.actionType === "create" ?
+                    >{this.props.actionType === "create" ?
                         "Create post" :
                         "Edit"
-                    }</button>
+                        }</button>
                 </div>
             </form>
         )

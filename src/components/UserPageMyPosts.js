@@ -8,28 +8,34 @@ import ShowPosts from './ShowPosts';
 
 class UserPageMyPosts extends React.Component {
     componentDidMount() {
-        this.props.postsActions.getPosts('posts');
+        const query = {
+            name: 'userUid',
+            symbol: '==',
+            equal: this.props.user.uid,
+        }
+
+        this.props.userActions.getUserPosts('posts', query);
     }
-    
-    renderPosts() {
-        let newData = [];
 
-        this.props.articles.map(article => {
-            if (article.email === this.props.user.email) {
-                newData.push(article);
+    componentDidUpdate(nextProps) {
+        if (this.props.user.userPosts !== nextProps.user.userPosts) {
+            const query = {
+                name: 'userUid',
+                symbol: '==',
+                equal: this.props.user.uid,
             }
-        })
-
-        return <ShowPosts 
-            isShowEditBlock={true}
-            articles={newData} />
+    
+            this.props.userActions.getUserPosts('posts', query);
+        }
     }
 
     render() {
         return (
             <div className="row">
-                {this.props.articles &&
-                    this.renderPosts()
+                {this.props.userPosts &&
+                    <ShowPosts 
+                    isShowEditBlock={true}
+                    articles={this.props.userPosts} />
                 }
             </div>
         )
@@ -38,7 +44,7 @@ class UserPageMyPosts extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.user.currentUser,
-    articles: state.posts.collection,
+    userPosts: state.user.userPosts,
 });
 
 const mapDispatchToProps = dispatch => ({

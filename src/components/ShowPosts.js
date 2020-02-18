@@ -21,6 +21,7 @@ class ShowPosts extends React.Component {
                 content={<UserPagePost
                     title={article.title}
                     article={article.article}
+                    publish={article.publish}
                     id={article.id}
                     actionType="edit"
                 />}
@@ -90,7 +91,7 @@ class ShowPosts extends React.Component {
                                         >read more...</Link>
 
                                         { this.showEditBlock(article) }
-                                        
+
                                         <LikePost likes={article.likes} postId={article.id} />
                                     </div>
                                 </div>
@@ -107,7 +108,8 @@ ShowPosts.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    articles: state.posts.collection,
+    user: state.user,
+    posts: state.posts,
 });
 
 const mapDispatchToProps = dispatch => ({

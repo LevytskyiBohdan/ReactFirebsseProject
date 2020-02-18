@@ -1,34 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import * as postActions from '../actions/post';
 import { bindActionCreators } from 'redux';
 import '../css/postDetails.css';
 
 
-class PostDetails extends React.Component {
-    componentDidMount() {
-        const id = this.props.location.split('/')[2];
+const PostDetails = ({post, postActions, match: { params: { id }}}) => {
+    React.useEffect(() => {
+        postActions.getPost("posts", id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id])
 
-        this.props.postActions.getPost("posts", id)
-    }
-
-    render() {
-        return (this.props.post &&
+        return (post &&
             <div className="container postDetails">
                 <div className="row">
                     <div className="col-12">
-                        <div className="imgTop" style={{ background: `url(${this.props.post.img[0]})` }}></div>
-                        {/* <img src={this.props.post.img[0]} className="img-fluid" alt="Responsive image" /> */}
-                        <h1>{this.props.post.title}</h1>
-                        <p>{this.props.post.article}</p>
-                        <h6>Author: {this.props.post.author}</h6>
+                        <div className="imgTop" style={{ background: `url(${post.img[0]})` }}></div>
+                        {/* <img src={post.img[0]} className="img-fluid" alt="Responsive image" /> */}
+                        <h1>{post.title}</h1>
+                        <p>{post.article}</p>
+                        <h6>Author: {post.author}</h6>
                         <div className="row mt-5">
 
                             {
-                                this.props.post.img.map((img, idx) => (
+                                post.img.map((img, idx) => (
                                     <div key={idx} className="col-12 col-lg-6 mb-4">
-                                        <img src={img} className="img-fluid rounded w-100" style={{height: "25vh"}} alt="Responsive image" />
+                                        <img src={img} className="img-fluid rounded w-100" style={{height: "25vh"}} alt="Responsive" />
                                     </div>
                                 ))
                             }
@@ -39,7 +37,6 @@ class PostDetails extends React.Component {
                 </div>
             </div>
         )
-    }
 }
 
 const mapStateToProps = state => ({

@@ -17,10 +17,14 @@ import {
     DELETE_USER,
     DELETE_USER_SUCCESS,
     DELETE_USER_FAILURE,
+    GET_USER_POSTS,
+    GET_USER_POSTS_SUCCESS,
+    GET_USER_POSTS_FAILURE,
     CREAR_USER_ERROR,
 } from '../constants';
 
 import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseEditUser, firebaseDeleteUser } from '../utils/firebaseUser';
+import { getCollectionWithQuery } from '../utils/firebaseDB';
 
 const userLoginAction = () => ({ type: USER_LOGIN });
 const userLogedAction = response => ({ type: USER_LOGIN_SUCCESS, payload: response });
@@ -118,6 +122,22 @@ export function deleteUser(data) {
             dispatch(deleteUserSuccess(response));
         }).catch(err => {
             dispatch(deleteUserError(err));
+        });
+    }
+}
+
+const getUserPostsReq = () => ({ type: GET_USER_POSTS });
+const getUserPostsSuccess = response => ({ type: GET_USER_POSTS_SUCCESS, payload: response });
+const getUserPostsError = err => ({ type: GET_USER_POSTS_FAILURE, payload: err });
+
+export function getUserPosts(collection, query) {
+    return dispatch => {
+        dispatch(getUserPostsReq());
+        getCollectionWithQuery(collection, query)
+        .then(response => {
+            dispatch(getUserPostsSuccess(response));
+        }).catch(err => {
+            dispatch(getUserPostsError(err));
         });
     }
 }

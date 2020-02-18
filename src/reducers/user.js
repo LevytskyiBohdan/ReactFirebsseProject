@@ -17,6 +17,9 @@ import {
     DELETE_USER,
     DELETE_USER_SUCCESS,
     DELETE_USER_FAILURE,
+    GET_USER_POSTS,
+    GET_USER_POSTS_SUCCESS,
+    GET_USER_POSTS_FAILURE,
     CREAR_USER_ERROR,
 } from '../constants';
 
@@ -27,6 +30,7 @@ export const initialState = {
     isLoaded: false,
     error: null,
     currentUser: null,
+    userPosts:null,
     status: null,
 };
 
@@ -84,6 +88,15 @@ export default createReducer(initialState, {
     },
     [DELETE_USER_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, status: DELETE_USER_FAILURE, };
+    },
+    [GET_USER_POSTS]: state => {
+        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+    },
+    [GET_USER_POSTS_SUCCESS]: (state, payload) => {
+        return {...state, userPosts: payload, isLoading: false, isLoaded: true, status: GET_USER_POSTS_SUCCESS, };
+    },
+    [GET_USER_POSTS_FAILURE]: (state, err) => {
+        return {...state, isLoading: false, error: err, status: GET_USER_POSTS_FAILURE, };
     },
     [CREAR_USER_ERROR]: (state, err) => {
         return {...state, error: null, };

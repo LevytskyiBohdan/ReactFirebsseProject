@@ -7,25 +7,45 @@ import * as postsActions from '../actions/posts';
 import ShowPosts from './ShowPosts';
 import '../css/Home.css';
 
-class Home extends React.Component {
-    componentDidMount() {
-        this.props.postsActions.getPosts('posts');
-    }
+// class Home extends React.Component {
+//     componentDidMount() {
+//         this.props.postsActions.getPosts('posts');
+//     }
     
-    render() {
-        return (<>
-            <div className="container-fluid home">
-                <div className="row">
-                    <div className="col-12 top"></div>
-                </div>
-                <div className="row">
-                    {this.props.articles &&
-                        <ShowPosts />
-                    }
-                </div>
+//     render() {
+//         return (<>
+//             <div className="container-fluid home">
+//                 <div className="row">
+//                     <div className="col-12 top"></div>
+//                 </div>
+//                 <div className="row">
+//                     {this.props.articles &&
+//                         <ShowPosts />
+//                     }
+//                 </div>
+//             </div>
+//         </>)
+//     }
+// }
+
+const Home = (props) => {
+    const [posts, setPosts] = React.useState(null);
+
+    React.useEffect(() => {
+        props.postsActions.getPosts('posts');
+        setPosts(props.articles)
+    }, [])
+
+    return (
+        <div className="container-fluid home">
+            <div className="row">
+                <div className="col-12 top"></div>
             </div>
-        </>)
-    }
+            <div className="row">
+                {posts ? <ShowPosts /> : <div>Loading...</div>}
+            </div>
+        </div>
+    )
 }
 
 const mapStateToProps = state => ({

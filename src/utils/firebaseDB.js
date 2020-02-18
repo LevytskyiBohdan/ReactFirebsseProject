@@ -15,6 +15,25 @@ export function getCollection(collection) {
     })
 }
 
+export function getCollectionWithQuery(collection, query) {
+    return new Promise((resolve, reject) => {
+        db.collection(collection).where(query.name, query.symbol, query.equal)
+            .get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    let data = [];
+                    querySnapshot.forEach((doc) => {
+                        data.push(Object.assign({}, { id: doc.id }, doc.data()));
+                    });
+                    return resolve(data)
+                });
+            })
+            .catch(function (error) {
+                return reject(error)
+            });
+    })
+}
+
 export function getById(collection, id) {
     return new Promise((resolve, reject) => {
         db.collection(collection).doc(id)
@@ -35,7 +54,7 @@ export function editById(data) {
     return new Promise((resolve, reject) => {
         const collection = data.collection;
         const id = data.id;
-        
+
         delete data.collection;
         delete data.id;
         getById(collection, id).then(res => {
@@ -44,22 +63,22 @@ export function editById(data) {
             return db.collection(collection).doc(id).set(
                 Object.assign({}, res, data)
             )
-            .then(function() {
-                return resolve(getCollection(collection));
-            })
-            .catch(function(error) {
-                return reject(error);
-            })
+                .then(function () {
+                    return resolve(getCollection(collection));
+                })
+                .catch(function (error) {
+                    return reject(error);
+                })
         })
     })
 }
 
 export function deleteById(data) {
-    return new Promise((resolve, reject)=> {
-        db.collection(data.collection).doc(data.id).delete().then(function() {
+    return new Promise((resolve, reject) => {
+        db.collection(data.collection).doc(data.id).delete().then(function () {
             return resolve(getCollection(data.collection));
 
-        }).catch(function(error) {
+        }).catch(function (error) {
             return reject(error);
 
         });

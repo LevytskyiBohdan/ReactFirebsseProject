@@ -87,6 +87,7 @@ class UserEditForm extends React.Component {
                 <div className="form-group">
                     <label htmlFor="isChange">Select which data you want to change</label>
                     <select
+                        defaultValue="defaultValue"
                         className="custom-select"
                         id="isChange"
                         onChange={evt => {
@@ -95,7 +96,7 @@ class UserEditForm extends React.Component {
                             })
                         }}
                     >   
-                        <option disabled selected>Select...</option>
+                        <option disabled>Select...</option>
                         <option value="img">Change image</option>
                         <option value="name">Change name</option>
                     </select>

@@ -40,7 +40,7 @@ class UserPageMyInfo extends React.Component {
                     actionData={null}
                     action={this.props.userActions.deleteUser}
                 />}
-                title="Login" closeAction={[
+                title="Edit user" closeAction={[
                     this.props.modalActions.hideModal,
                     this.props.userActions.clearUserError
                 ]} />

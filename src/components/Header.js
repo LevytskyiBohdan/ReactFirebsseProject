@@ -10,6 +10,10 @@ import LoginForm from './LoginForm';
 import SigninForm from './SigninForm';
 
 class Header extends React.Component {
+    componentDidMount() {
+        this.props.userActions.getCurrentUser();
+    }
+    
     logOut() {
         this.props.push('/');
         this.props.userActions.userLogout()

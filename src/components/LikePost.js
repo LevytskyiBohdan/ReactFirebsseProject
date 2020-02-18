@@ -20,7 +20,7 @@ class LikePost extends React.Component {
     }
 
     onClick(status) {
-        if (!this.props.currentUser) {
+        if (!this.props.userUid) {
             this.setState({
                 isShowMessage: true,
                 message: 'You should be authorized.'
@@ -29,9 +29,9 @@ class LikePost extends React.Component {
         }
 
         const likes = this.props.likes;
-        const currentEmail = this.props.currentUser.email;
+        const userUid = this.props.userUid;
 
-        if (!likes.users.includes(currentEmail)) {
+        if (!likes.users.includes(userUid)) {
             switch (status) {
                 case true:
                     this.props.postsActions.likeCount(
@@ -40,7 +40,7 @@ class LikePost extends React.Component {
                             id: this.props.postId,
                             likes: {
                                 count: likes.count + 1,
-                                users: [ ...likes.users, currentEmail ],
+                                users: [ ...likes.users, userUid ],
                             }
                         }
                     );
@@ -52,7 +52,7 @@ class LikePost extends React.Component {
                             id: this.props.postId,
                             likes: {
                                 count: likes.count - 1,
-                                users: [ ...likes.users, currentEmail ],
+                                users: [ ...likes.users, userUid ],
                             }
                         }
                     );
@@ -96,7 +96,7 @@ LikePost.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    currentUser: state.user.currentUser,
+    userUid: state.user.currentUser.uid,
 });
 
 const mapDispatchToProps = dispatch => ({
