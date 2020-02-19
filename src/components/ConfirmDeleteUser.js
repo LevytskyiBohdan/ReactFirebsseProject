@@ -78,9 +78,6 @@ class ConfirmDeleteUser extends React.Component {
 }
 
 ConfirmDeleteUser.propTypes = {
-    title: PropTypes.string,
-    button: PropTypes.string,
-    actionData: PropTypes.object,
     action: PropTypes.any,
 }
 

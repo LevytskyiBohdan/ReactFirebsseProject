@@ -13,7 +13,36 @@ class LoginForm extends React.Component {
             email: "",
             password: "",
             isSubmitting: false,
+            invalidsinput: []
         }
+
+        this.inputsToValidate = ['email', 'password'];
+    }
+
+    validate(field) {
+        let isValid = true;
+        const invalidsinput = [];
+
+        this.inputsToValidate.forEach(input => {
+            let isInputValid = true;
+
+            isInputValid = this.state[input] && this.state[input] !== null && this.state[input].trim() !== '';
+
+            if (!isInputValid) {
+                invalidsinput.push(input);
+                isValid = false;
+            }
+        });
+
+        this.setState({
+            invalidsinput,
+        });
+
+        return isValid;
+    }
+
+    isValidInput(name) {
+        return this.state.invalidsinput.indexOf(name) !== -1;
     }
 
     componentDidUpdate(prevProps) {
@@ -29,7 +58,7 @@ class LoginForm extends React.Component {
     }
 
     onSubmit() {
-        if (this.state.isSubmitting) return null;
+        if (this.state.isSubmitting || !this.validate()) return null;
 
         this.setState({
             isSubmitting: true,
@@ -48,18 +77,22 @@ class LoginForm extends React.Component {
                     <label htmlFor="email">Email address</label>
                     <input
                         type="email"
-                        className="form-control"
+                        className={`form-control ${this.isValidInput('email') ? "is-invalid" : ""}`}
                         id="email"
-                        onChange={evt => { this.setState({ email: evt.target.value }) }}
+                        onChange={evt => {
+                            this.setState({ email: evt.target.value });
+                        }}
                     />
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password</label>
                     <input
                         type="password"
-                        className="form-control"
+                        className={`form-control ${this.isValidInput('password') ? "is-invalid" : ""}`}
                         id="password"
-                        onChange={evt => { this.setState({ password: evt.target.value }) }}
+                        onChange={evt => {
+                            this.setState({ password: evt.target.value })
+                        }}
                     />
                 </div>
                 <button

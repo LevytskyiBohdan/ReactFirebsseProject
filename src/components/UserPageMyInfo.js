@@ -18,9 +18,6 @@ class UserPageMyInfo extends React.Component {
         this.props.modalActions.showModal(
             <Modal
                 content={<ConfirmDeleteUser
-                    title="Do you want delete your account?"
-                    button="Delete"
-                    actionData={null}
                     action={this.props.userActions.deleteUser}
                 />}
                 title="Login" closeAction={[

@@ -4,7 +4,7 @@ import {
     GET_POST_FAILURE,
 } from '../constants';
 
-import { getById, createDocument } from '../utils/firebaseDB';
+import { getById } from '../utils/firebaseDB';
 
 const getPostAction = () => ({ type: GET_POST });
 const getPostSuccessAction = response => ({ type: GET_POST_SUCCESS, payload: response });

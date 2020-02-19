@@ -5,7 +5,6 @@ import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import * as postsActions from '../actions/posts';
-import ShowPosts from './ShowPosts';
 import InfoMessage from './InfoMessage';
 import '../css/LikePost.css';
 
@@ -29,7 +28,7 @@ class LikePost extends React.Component {
         }
 
         const likes = this.props.likes;
-        const userUid = this.props.userUid;
+        const userUid = this.props.userUid.uid;
 
         if (!likes.users.includes(userUid)) {
             switch (status) {
@@ -38,6 +37,7 @@ class LikePost extends React.Component {
                         { 
                             collection: 'posts',
                             id: this.props.postId,
+                            query: this.props.query,
                             likes: {
                                 count: likes.count + 1,
                                 users: [ ...likes.users, userUid ],
@@ -50,6 +50,7 @@ class LikePost extends React.Component {
                         {
                             collection: 'posts',
                             id: this.props.postId,
+                            query: this.props.query,
                             likes: {
                                 count: likes.count - 1,
                                 users: [ ...likes.users, userUid ],
@@ -96,7 +97,7 @@ LikePost.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    userUid: state.user.currentUser.uid,
+    userUid: state.user.currentUser,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -2,9 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
-import ShowPosts from './ShowPosts';
+import * as modalActions from '../actions/modal';
+import Modal from './Modal';
+import ConfirmDelete from './ConfirmDelete';
+import "../css/UserPageMyPosts.css";
 
 class UserPageMyPosts extends React.Component {
     componentDidMount() {
@@ -13,29 +17,77 @@ class UserPageMyPosts extends React.Component {
             symbol: '==',
             equal: this.props.user.uid,
         }
-
         this.props.userActions.getUserPosts('posts', query);
     }
 
     componentDidUpdate(nextProps) {
-        if (this.props.user.userPosts !== nextProps.user.userPosts) {
-            const query = {
-                name: 'userUid',
-                symbol: '==',
-                equal: this.props.user.uid,
-            }
-    
-            this.props.userActions.getUserPosts('posts', query);
+        const query = {
+            name: 'userUid',
+            symbol: '==',
+            equal: this.props.user.uid,
         }
+
+        if (this.props.posts !== nextProps.posts) {
+            this.props.userActions.getUserPosts('posts', query);
+            this.props.modalActions.hideModal();
+        }
+    }
+
+    onDelete(article) {
+        this.props.modalActions.showModal(
+            <Modal
+                content={<ConfirmDelete
+                    action={() => this.props.postsActions.deletePost({
+                        collection: "posts",
+                        id: article.id,
+                        query: {
+                            name: 'userUid',
+                            symbol: '==',
+                            equal: this.props.user.uid,
+                        },
+                    })}
+                />}
+                title="Login" closeAction={[this.props.modalActions.hideModal]} />
+
+        );
     }
 
     render() {
         return (
-            <div className="row">
-                {this.props.userPosts &&
-                    <ShowPosts 
-                    isShowEditBlock={true}
-                    articles={this.props.userPosts} />
+            <div className="row userPosts">
+                {this.props.userPosts && this.props.isLoaded && 
+                    this.props.userPosts.map((article, idx) =>
+                        (
+                            <div key={idx} className="col-12 col-12 col-sm-6 col-md-4 mb-3 posts">
+                                <div className="card pt-3">
+                                    <img src={article.img} className="card-img-top" alt="..." />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{article.title}</h5>
+                                        <p className="card-text">{article.article}</p>
+                                        <h6 className="card-title">
+                                            <span className="text-muted">Author: </span>
+                                            {article.author}
+                                        </h6>
+                                        <Link
+                                            className="btn btn-block btn-primary"
+                                            to={`/post/${article.id}`}
+                                        >read more...</Link>
+
+                                        <Link
+                                            className="btn btn-block btn-warning"
+                                            to={`/user/editPost/${article.id}`}
+                                        >Edit</Link>
+                                        <button
+                                            type="button"
+                                            className="btn btn-block btn-danger"
+                                            onClick={() => { this.onDelete(article) }}
+                                        >Delete</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    )
                 }
             </div>
         )
@@ -44,12 +96,15 @@ class UserPageMyPosts extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.user.currentUser,
+    isLoaded: state.user.isLoaded,
     userPosts: state.user.userPosts,
+    posts: state.posts.collection,
 });
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
     postsActions: bindActionCreators(postsActions, dispatch),
+    modalActions: bindActionCreators(modalActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserPageMyPosts));

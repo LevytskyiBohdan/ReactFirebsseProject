@@ -23,8 +23,8 @@ import {
     CREAR_USER_ERROR,
 } from '../constants';
 
-import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseEditUser, firebaseDeleteUser } from '../utils/firebaseUser';
-import { getCollectionWithQuery } from '../utils/firebaseDB';
+import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseEditUser, firebaseDeleteUser, } from '../utils/firebaseUser';
+import { getCollectionWithQuery, /*setNewUserNameInPosts*/ } from '../utils/firebaseDB';
 
 const userLoginAction = () => ({ type: USER_LOGIN });
 const userLogedAction = response => ({ type: USER_LOGIN_SUCCESS, payload: response });
@@ -102,6 +102,7 @@ export function editUser(data) {
     return dispatch => {
         dispatch(editUserReq());
         firebaseEditUser(data)
+        // setNewUserNameInPosts(data)
         .then(response => {
             dispatch(editUserSuccess(response));
         }).catch(err => {

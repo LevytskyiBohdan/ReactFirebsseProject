@@ -13,7 +13,7 @@ const protectedRoutes = (props) => {
 
     return (
         uid ?
-            <Route render={props.render} /> :
+            <Route exact render={props.render} /> :
             null
     )
 }

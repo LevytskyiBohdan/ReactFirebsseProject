@@ -16,20 +16,20 @@ import {
     DELETE_POST_FAILURE,
 } from '../constants';
 
-import { getCollection, editById, createDocument, deleteById } from '../utils/firebaseDB';
+import { editById, createDocument, deleteById, getCollectionWithQuery } from '../utils/firebaseDB';
 
-const getDataAction = () => ({ type: GET_POSTS });
-const getDataSuccessAction = response => ({ type: GET_POSTS_SUCCESS, payload: response });
-const getDataErrorAction = err => ({ type: GET_POSTS_FAILURE, payload: err });
+const getPostsAction = () => ({ type: GET_POSTS });
+const getPostsSuccessAction = response => ({ type: GET_POSTS_SUCCESS, payload: response });
+const getPostsErrorAction = err => ({ type: GET_POSTS_FAILURE, payload: err });
 
-export function getPosts(data) {
+export function getPosts(collection, query) {
     return dispatch => {
-        dispatch(getDataAction());
-        getCollection(data)
+        dispatch(getPostsAction());
+        getCollectionWithQuery(collection, query)
         .then(response => {
-            dispatch(getDataSuccessAction(response));
+            dispatch(getPostsSuccessAction(response));
         }).catch(err => {
-            dispatch(getDataErrorAction(err));
+            dispatch(getPostsErrorAction(err));
         });
 
     }
@@ -76,10 +76,8 @@ const deletePostErrorAction = err => ({ type: DELETE_POST_FAILURE, payload: err 
 export function deletePost(data) {
     return dispatch => {
         dispatch(deletePostAction());
-        console.log(">>>>")
         deleteById(data)
         .then(response => {
-            console.log(response)
             dispatch(deletePostSuccessAction(response));
         }).catch(err => {
             dispatch(deletePostErrorAction(err));

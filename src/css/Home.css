@@ -5,3 +5,19 @@
     height: 35vh;
     margin-bottom: 20px;
 }
+
+.home .card-text{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 10vh;
+}
+
+.home img {
+    height: 150px;
+}
+
+.home h5 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -7,8 +7,7 @@ import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
 import * as postActions from '../actions/post';
 import UserPageSideBar from '../components/UserPageSideBar';
-import UserPageDelete from '../components/UserPageDelete';
-import UserPagePost from '../components/UserPagePost';
+import UserPageCreatePost from '../components/UserPageCreatePost';
 import UserPageMyPosts from '../components/UserPageMyPosts';
 import UserPageMyInfo from '../components/UserPageMyInfo';
 
@@ -21,9 +20,7 @@ class UserPageView extends React.Component {
     getCurrentPage() {
         switch (this.props.location) {
             case "/user/createPost":
-                return <UserPagePost actionType="create"/>;
-            case "/user/deleteAccount":
-                return <UserPageDelete />;
+                return <UserPageCreatePost />;
             case "/user/myPosts":
                 return <UserPageMyPosts />;
             default:
@@ -36,7 +33,7 @@ class UserPageView extends React.Component {
             <div className="row">
 
                 <UserPageSideBar />
-                <div className="col-9 userPageMyPosts">
+                <div className="col-9">
                     <div className="tab-content">
                         <div className="tab-pane fade show active">
                             {

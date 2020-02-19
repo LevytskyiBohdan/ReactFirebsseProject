@@ -17,7 +17,6 @@ const PostDetails = ({post, postActions, match: { params: { id }}}) => {
                 <div className="row">
                     <div className="col-12">
                         <div className="imgTop" style={{ background: `url(${post.img[0]})` }}></div>
-                        {/* <img src={post.img[0]} className="img-fluid" alt="Responsive image" /> */}
                         <h1>{post.title}</h1>
                         <p>{post.article}</p>
                         <h6>Author: {post.author}</h6>
