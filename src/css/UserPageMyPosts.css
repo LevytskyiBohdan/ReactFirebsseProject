@@ -1,0 +1,15 @@
+.userPosts .card-text{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 10vh;
+}
+
+.userPosts img {
+    height: 150px;
+}
+
+.userPosts h5 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
