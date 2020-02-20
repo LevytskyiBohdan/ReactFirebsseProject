@@ -13,12 +13,12 @@ class Header extends React.Component {
     componentDidMount() {
         this.props.userActions.getCurrentUser();
     }
-    
+
     logOut() {
         this.props.push('/');
         this.props.userActions.userLogout()
     }
-    
+
     render() {
         const user = this.props.user;
         return (
@@ -49,18 +49,8 @@ class Header extends React.Component {
                                                         type="button"
                                                         className="btn btn-secondary"
                                                         onClick={() => {
-                                                            this.props.modalActions.showModal(
-                                                                <Modal
-                                                                    content={<LoginForm
-                                                                        confirmAction={this.props.userActions.userLogin}
-                                                                    />}
-                                                                    title="Login"
-                                                                    closeAction={
-                                                                        [this.props.userActions.clearUserError, this.props.modalActions.hideModal,]
-                                                                    }
-                                                                />)
+                                                            this.props.modalActions.showModal(<LoginForm />)
                                                         }}
-
                                                     >Login</button>
                                                 </li>
                                                 <li className="nav-item mr-3">
@@ -68,16 +58,7 @@ class Header extends React.Component {
                                                         type="button"
                                                         className="btn btn-secondary"
                                                         onClick={() => {
-                                                            this.props.modalActions.showModal(
-                                                                <Modal
-                                                                    content={<SigninForm
-                                                                        confirmAction={this.props.userActions.createUser}
-                                                                    />}
-                                                                    title="Login"
-                                                                    closeAction={
-                                                                        [this.props.userActions.clearUserError, this.props.modalActions.hideModal,]
-                                                                    }
-                                                                />)
+                                                            this.props.modalActions.showModal(<SigninForm/>)
                                                         }}
                                                     >Signin</button>
                                                 </li>
@@ -108,7 +89,7 @@ class Header extends React.Component {
                         </nav>
                     </div>
                 </div>
-            </div>)
+            </div >)
     }
 }
 

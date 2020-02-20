@@ -14,6 +14,7 @@ import {
     DELETE_POST,
     DELETE_POST_SUCCESS,
     DELETE_POST_FAILURE,
+    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import createReducer from '../utils/createReducer';
@@ -72,5 +73,8 @@ export default createReducer(initialState, {
     },
     [LIKE_COUNT_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, status: LIKE_COUNT_FAILURE,};
+    },
+    [CLEAR_ALL_ERROR]: (state) => {
+        return { ...state, error: null, };
     },
 });

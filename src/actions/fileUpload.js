@@ -4,6 +4,7 @@ import {
     FILE_UPLOAD_FAILURE,
     CLEAR_FILE_UPLOADER,
     DELETE_FILE_FROM_UPLOADED,
+    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import { firebaseFileUpload } from '../utils/firebaseStorage';

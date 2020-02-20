@@ -1,4 +1,4 @@
-import { SHOW_MODAL, HIDE_MODAL } from '../constants';
+import { SHOW_MODAL, HIDE_MODAL, CLEAR_ALL_ERROR } from '../constants';
 
 export const showModal = popap => {
     return {
@@ -12,3 +12,5 @@ export const hideModal = () => {
         type: HIDE_MODAL,
     }
 }
+
+export const clearError = () => ({ type: CLEAR_ALL_ERROR });

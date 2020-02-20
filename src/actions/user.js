@@ -24,7 +24,7 @@ import {
 } from '../constants';
 
 import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseEditUser, firebaseDeleteUser, } from '../utils/firebaseUser';
-import { getCollectionWithQuery, /*setNewUserNameInPosts*/ } from '../utils/firebaseDB';
+import { getCollectionWithQuery, createDocumentWithId, getById } from '../utils/firebaseDB';
 
 const userLoginAction = () => ({ type: USER_LOGIN });
 const userLogedAction = response => ({ type: USER_LOGIN_SUCCESS, payload: response });
@@ -34,11 +34,12 @@ export function userLogin(data) {
     return dispatch => {
         dispatch(userLoginAction());
         firebaseAuth(data)
-        .then(response => {
-            dispatch(userLogedAction(response));
-        }).catch(err => {
-            dispatch(userLoginErrorAction(err));
-        });
+            .then(() => firebaseGetCurrentUser())
+            .then(response => {
+                dispatch(userLogedAction(response));
+            }).catch(err => {
+                dispatch(userLoginErrorAction(err));
+            });
 
     }
 }
@@ -52,11 +53,11 @@ export function userLogout(data) {
     return dispatch => {
         dispatch(userLogoutAction());
         firebaseAuthLogout(data)
-        .then(response => {
-            dispatch(userLogoutedAction(response));
-        }).catch(err => {
-            dispatch(userLogoutErrorAction(err));
-        });
+            .then(response => {
+                dispatch(userLogoutedAction(response));
+            }).catch(err => {
+                dispatch(userLogoutErrorAction(err));
+            });
 
     }
 }
@@ -65,15 +66,19 @@ const getUser = () => ({ type: GET_USER });
 const getUserSuccess = response => ({ type: GET_USER_SUCCESS, payload: response });
 const getUserError = err => ({ type: GET_USER_FAILURE, payload: err });
 
-export function getCurrentUser(data) {
+export function getCurrentUser() {
     return dispatch => {
         dispatch(getUser());
         firebaseGetCurrentUser()
-        .then(response => {
-            dispatch(getUserSuccess(response));
-        }).catch(err => {
-            dispatch(getUserError(err));
-        });
+            .then(user => 
+                getById('users', user.uid)
+                    .then(res => Object.assign({}, user, res))
+            )
+            .then(response => {
+                dispatch(getUserSuccess(response));
+            }).catch(err => {
+                dispatch(getUserError(err));
+            });
 
     }
 }
@@ -86,11 +91,21 @@ export function createUser(data) {
     return dispatch => {
         dispatch(createUserReq());
         firebaseCreateUser(data)
-        .then(response => {
-            dispatch(createUserSuccess(response));
-        }).catch(err => {
-            dispatch(createUserError(err));
-        });
+            .then(user => { 
+                delete data.password;
+                delete data.email;
+
+                return createDocumentWithId({
+                id: user.user.uid,
+                collection: 'users',
+                ...data,
+            })})
+            .then(() => getCurrentUser())
+            .then(response => {
+                dispatch(createUserSuccess(response));
+            }).catch(err => {
+                dispatch(createUserError(err));
+            });
     }
 }
 
@@ -102,12 +117,12 @@ export function editUser(data) {
     return dispatch => {
         dispatch(editUserReq());
         firebaseEditUser(data)
-        // setNewUserNameInPosts(data)
-        .then(response => {
-            dispatch(editUserSuccess(response));
-        }).catch(err => {
-            dispatch(editUserError(err));
-        });
+            // setNewUserNameInPosts(data)
+            .then(response => {
+                dispatch(editUserSuccess(response));
+            }).catch(err => {
+                dispatch(editUserError(err));
+            });
     }
 }
 
@@ -119,11 +134,11 @@ export function deleteUser(data) {
     return dispatch => {
         dispatch(deleteUserReq());
         firebaseDeleteUser(data)
-        .then(response => {
-            dispatch(deleteUserSuccess(response));
-        }).catch(err => {
-            dispatch(deleteUserError(err));
-        });
+            .then(response => {
+                dispatch(deleteUserSuccess(response));
+            }).catch(err => {
+                dispatch(deleteUserError(err));
+            });
     }
 }
 
@@ -135,13 +150,12 @@ export function getUserPosts(collection, query) {
     return dispatch => {
         dispatch(getUserPostsReq());
         getCollectionWithQuery(collection, query)
-        .then(response => {
-            dispatch(getUserPostsSuccess(response));
-        }).catch(err => {
-            dispatch(getUserPostsError(err));
-        });
+            .then(response => {
+                dispatch(getUserPostsSuccess(response));
+            }).catch(err => {
+                dispatch(getUserPostsError(err));
+            });
     }
 }
 
 export const clearUserError = () => ({ type: CREAR_USER_ERROR });
-

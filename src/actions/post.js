@@ -2,6 +2,7 @@ import {
     GET_POST,
     GET_POST_SUCCESS,
     GET_POST_FAILURE,
+    CLEAR_ALL_ERROR
 } from '../constants';
 
 import { getById } from '../utils/firebaseDB';
@@ -22,4 +23,3 @@ export function getPost(collection, id) {
 
     }
 }
-

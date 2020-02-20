@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as modalActions from '../actions/modal';
+import * as userActions from '../actions/user';
 import * as fileUploadActions from '../actions/fileUpload';
 import ErrorMessage from './ErrorMessage';
 import FileUploader from './FileUploader';
@@ -90,7 +91,7 @@ class SigninForm extends React.Component {
             photoURL: this.state.photoURL[0],
         }
 
-        this.props.confirmAction(date)
+        this.props.userActions.createUser(date)
     }
 
     render() {
@@ -169,6 +170,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     modalActions: bindActionCreators(modalActions, dispatch),
     fileUploadActions: bindActionCreators(fileUploadActions, dispatch),
+    userActions: bindActionCreators(userActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SigninForm));

@@ -2,6 +2,7 @@ import {
     GET_POST,
     GET_POST_SUCCESS,
     GET_POST_FAILURE,
+    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import createReducer from '../utils/createReducer';
@@ -24,5 +25,8 @@ export default createReducer(initialState, {
     },
     [GET_POST_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, status: GET_POST_FAILURE,};
+    },
+    [CLEAR_ALL_ERROR]: (state) => {
+        return { ...state, error: null, };
     },
 });

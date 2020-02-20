@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as modalActions from '../actions/modal';
+import * as userActions from '../actions/user';
 import ErrorMessage from './ErrorMessage';
 
 class LoginForm extends React.Component {
@@ -64,7 +65,12 @@ class LoginForm extends React.Component {
             isSubmitting: true,
         })
 
-        this.props.confirmAction({ email: this.state.email, password: this.state.password })
+        const data = {
+            email: this.state.email,
+            password: this.state.password,
+        }
+
+        this.props.userActions.userLogin(data);
     }
 
     render() {
@@ -116,6 +122,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     modalActions: bindActionCreators(modalActions, dispatch),
+    userActions: bindActionCreators(userActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginForm));

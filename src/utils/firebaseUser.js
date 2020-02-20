@@ -1,8 +1,6 @@
 import firebase from "./firebase";
 import {
     USER_LOGOUT_SUCCESS,
-    GET_USER_FAILURE,
-    DELETE_USER_SUCCESS,
 } from '../constants';
 
 export function firebaseGetCurrentUser() {
@@ -11,23 +9,23 @@ export function firebaseGetCurrentUser() {
             if (user) {
                 return resolve(user);
             } else {
-                return reject(GET_USER_FAILURE);
+                return reject();
             }
         });
     })
 }
 
-export function firebaseCreateUser(userData) {
+export function firebaseCreateUser(data) {
     return new Promise((resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(userData.email, userData.password).then(user => {
-            delete userData.email;
-            delete userData.password;
-
-            resolve(firebaseEditUser(userData));
-        }).catch(function (error) {
+        firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(user => {
+            
+            return resolve(user);
+        })
+        .catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
-            reject((errorCode || errorMessage) ? { errorCode, errorMessage } : error);
+
+            return reject((errorCode || errorMessage) ? { errorCode, errorMessage } : error);
         });
     })
 }
@@ -35,9 +33,13 @@ export function firebaseCreateUser(userData) {
 export function firebaseEditUser(userData) {
     return new Promise((resolve, reject) => {
         var user = firebase.auth().currentUser;
+
         user.updateProfile(userData).then(function () {
-            return firebaseGetCurrentUser().then(res => resolve(res)).catch(err => reject(err))
-        }).catch(function (error) {
+            return resolve();
+
+        })
+        .catch(function (error) {
+            
             return reject(error);
         });
     })
@@ -46,10 +48,13 @@ export function firebaseEditUser(userData) {
 export function firebaseAuth(user) {
     return new Promise((resolve, reject) => {
         firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(() => {
-            return firebaseGetCurrentUser().then(res => resolve(res).catch(err => reject(err)))
-        }).catch(function (error) {
+            
+            return resolve();
+        })
+        .catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
+            
             return reject((errorCode || errorMessage) ? { errorCode, errorMessage } : error)
         });
     })
@@ -58,7 +63,7 @@ export function firebaseAuth(user) {
 export function firebaseAuthLogout() {
     return new Promise((resolve, reject) => {
         return firebase.auth().signOut().then(function () {
-            return resolve(USER_LOGOUT_SUCCESS);
+            return resolve();
         }).catch(function (error) {
             return reject(error);
         });
@@ -71,7 +76,7 @@ export function firebaseDeleteUser(data) {
             const user = firebase.auth().currentUser;
             return resolve(
                 user.delete().then(function () {
-                    return resolve(firebaseGetCurrentUser());
+                    return resolve();
                 }).catch(function (error) {
                     return reject(error);
                 })

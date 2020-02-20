@@ -3,7 +3,7 @@ import {
     FILE_UPLOAD_SUCCESS,
     FILE_UPLOAD_FAILURE,
     CLEAR_FILE_UPLOADER,
-    DELETE_FILE_FROM_UPLOADED
+    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import createReducer from '../utils/createReducer';
@@ -28,5 +28,8 @@ export default createReducer(initialState, {
     },
     [CLEAR_FILE_UPLOADER]: (state) => {
         return { ...state, isLoading: false, isLoaded: false, error: null, filesURI: null, status: null, };
+    },
+    [CLEAR_ALL_ERROR]: (state) => {
+        return { ...state, error: null, };
     },
 });

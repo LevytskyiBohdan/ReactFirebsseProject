@@ -14,6 +14,7 @@ import {
     DELETE_POST,
     DELETE_POST_SUCCESS,
     DELETE_POST_FAILURE,
+    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import { editById, createDocument, deleteById, getCollectionWithQuery } from '../utils/firebaseDB';

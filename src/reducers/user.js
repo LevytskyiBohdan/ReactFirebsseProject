@@ -21,6 +21,7 @@ import {
     GET_USER_POSTS_SUCCESS,
     GET_USER_POSTS_FAILURE,
     CREAR_USER_ERROR,
+    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import createReducer from '../utils/createReducer';
@@ -100,5 +101,8 @@ export default createReducer(initialState, {
     },
     [CREAR_USER_ERROR]: (state, err) => {
         return {...state, error: null, };
+    },
+    [CLEAR_ALL_ERROR]: (state) => {
+        return { ...state, error: null, };
     },
 });
