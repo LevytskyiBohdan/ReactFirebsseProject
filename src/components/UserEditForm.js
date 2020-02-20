@@ -46,13 +46,16 @@ class UserEditForm extends React.Component {
             case "name":
                 Object.assign(date, {
                     displayName: this.state.name,
-                    newName: this.state.name,
-                    userUid: this.props.user.currentUser.uid, 
-                    collection: 'posts',
+                    id: this.props.user.currentUser.uid, 
+                    collection: 'users',
                 })
                 break;
             case "img":
-                Object.assign(date, { photoURL: this.props.filesURI[0] })
+                Object.assign(date, { 
+                    id: this.props.user.currentUser.uid, 
+                    collection: 'users',
+                    photoURL: this.props.filesURI[0] 
+                })
                 break;
         }
 

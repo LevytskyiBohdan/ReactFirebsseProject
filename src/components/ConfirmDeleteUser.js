@@ -30,6 +30,8 @@ class ConfirmDeleteUser extends React.Component {
         this.props.userActions.deleteUser({
             email: this.state.email,
             password: this.state.password,
+            id: this.props.user.currentUser.uid,
+            collection: "users",
         })
     }
 

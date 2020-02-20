@@ -42,7 +42,6 @@ export function getById(collection, id) {
         db.collection(collection).doc(id)
             .get().then(function (doc) {
                 if (doc) {
-                    console.log(doc.data())
                     return resolve(doc.data());
                 } else {
                     return reject("No such document!")
@@ -58,10 +57,10 @@ export function editById(data) {
     return new Promise((resolve, reject) => {
         const collection = data.collection;
         const id = data.id;
-
+        
         delete data.collection;
         delete data.id;
-
+        console.log(data, id, collection)
         db.collection(collection).doc(id).set(data, { merge: true })
             .then(function () {
                 return resolve();
@@ -74,8 +73,9 @@ export function editById(data) {
 
 export function deleteById(data) {
     return new Promise((resolve, reject) => {
+        console.log(data)
         db.collection(data.collection).doc(data.id).delete().then(function () {
-            return resolve(getCollectionWithQuery(data.collection, data.query));
+            return resolve();
 
         }).catch(function (error) {
             return reject(error);

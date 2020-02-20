@@ -15,17 +15,7 @@ class UserPageMyInfo extends React.Component {
     }
 
     deleteUser() {
-        this.props.modalActions.showModal(
-            <Modal
-                content={<ConfirmDeleteUser
-                    action={this.props.userActions.deleteUser}
-                />}
-                title="Login" closeAction={[
-                    this.props.modalActions.hideModal,
-                    this.props.userActions.clearUserError
-                ]} />
-
-        );
+        this.props.modalActions.showModal(<ConfirmDeleteUser />);
     }
 
     editUser() {

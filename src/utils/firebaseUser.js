@@ -72,15 +72,14 @@ export function firebaseAuthLogout() {
 
 export function firebaseDeleteUser(data) {
     return new Promise((resolve, reject) => {
-        return firebaseAuth(data).then(() => {
+        // return resolve()
+        firebaseAuth(data).then(() => {
             const user = firebase.auth().currentUser;
-            return resolve(
                 user.delete().then(function () {
                     return resolve();
                 }).catch(function (error) {
                     return reject(error);
                 })
-            );
         })
         .catch(err => {
             return reject(err);
