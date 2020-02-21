@@ -2,20 +2,17 @@
 /* eslint-disable default-case */
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import * as userActions from '../../actions/user';
-import * as modalActions from '../../actions/modal';
-import * as postsActions from '../../actions/posts';
-import * as fileUploadActions from '../../actions/fileUpload';
-import { FILE_UPLOAD_SUCCESS, FILE_UPLOAD_FAILURE } from '../../constants';
+import * as modalActions from '../actions/modal';
+import * as fileUploadActions from '../actions/fileUpload';
 
-class PreviewImg extends React.Component {
+class FileUploadForm extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            chosenFiles: [],
+            chosenFiles: this.props.chosenFiles || [],
         }
     }
     
@@ -96,13 +93,6 @@ class PreviewImg extends React.Component {
                     >Choose</button>
                 </div>
             </form>
-
-
-
-
-
-
-
         </>
         )
     }
@@ -116,10 +106,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    userActions: bindActionCreators(userActions, dispatch),
     modalActions: bindActionCreators(modalActions, dispatch),
-    postsActions: bindActionCreators(postsActions, dispatch),
     fileUploadActions: bindActionCreators(fileUploadActions, dispatch),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PreviewImg));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FileUploadForm));

@@ -9,7 +9,7 @@ import * as postsActions from '../actions/posts';
 import * as postActions from '../actions/post';
 import * as modalActions from '../actions/modal';
 import * as fileUploadActions from '../actions/fileUpload';
-import FileUploader from './FileUploader/FileUploader';
+import FileUploader from './FileUploader';
 import InfoMessage from './InfoMessage';
 import ErrorMessage from './ErrorMessage';
 import { CREATE_POST_SUCCESS, CREATE_POST_FAILURE } from '../constants';
