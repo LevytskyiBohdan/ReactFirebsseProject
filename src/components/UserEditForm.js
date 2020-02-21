@@ -8,7 +8,7 @@ import * as modalActions from '../actions/modal';
 import * as userActions from '../actions/user';
 import * as fileUploadActions from '../actions/fileUpload';
 import ErrorMessage from './ErrorMessage';
-import FileUploader from './FileUploader';
+import FileUploader from './FileUploader/FileUploader';
 
 class UserEditForm extends React.Component {
     constructor(props) {

@@ -26,15 +26,23 @@ import {
 import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseDeleteUser, } from '../utils/firebaseUser';
 import { getCollectionWithQuery, createDocumentWithId, getById, editById, deleteById } from '../utils/firebaseDB';
 
+function _getCurrentUser() {
+    return firebaseGetCurrentUser()
+        .then(user =>
+            getById('users', user.uid)
+                .then(res => Object.assign({}, user, res))
+        )
+}
+
 const userLoginAction = () => ({ type: USER_LOGIN });
 const userLogedAction = response => ({ type: USER_LOGIN_SUCCESS, payload: response });
 const userLoginErrorAction = err => ({ type: USER_LOGIN_FAILURE, payload: err });
 
-export function userLogin(data) {
+export function userLogin(email, password) {
     return dispatch => {
         dispatch(userLoginAction());
-        firebaseAuth(data)
-            .then(() => firebaseGetCurrentUser())
+        firebaseAuth(email, password)
+            .then(() => _getCurrentUser())
             .then(response => {
                 dispatch(userLogedAction(response));
             }).catch(err => {
@@ -66,14 +74,6 @@ const getUser = () => ({ type: GET_USER });
 const getUserSuccess = response => ({ type: GET_USER_SUCCESS, payload: response });
 const getUserError = err => ({ type: GET_USER_FAILURE, payload: err });
 
-function _getCurrentUser() {
-    return firebaseGetCurrentUser()
-        .then(user =>
-            getById('users', user.uid)
-                .then(res => Object.assign({}, user, res))
-        )
-}
-
 export function getCurrentUser() {
     return dispatch => {
         dispatch(getUser());
@@ -91,19 +91,12 @@ const createUserReq = () => ({ type: CREATE_USER });
 const createUserSuccess = response => ({ type: CREATE_USER_SUCCESS, payload: response });
 const createUserError = err => ({ type: CREATE_USER_FAILURE, payload: err });
 
-export function createUser(data) {
+export function createUser(email, password, data) {
     return dispatch => {
         dispatch(createUserReq());
-        firebaseCreateUser(data)
+        firebaseCreateUser(password, email)
             .then(user => {
-                delete data.password;
-                delete data.email;
-
-                return createDocumentWithId({
-                    id: user.user.uid,
-                    collection: 'users',
-                    ...data,
-                })
+                return createDocumentWithId('users', user.user.id, data)
             })
             .then(() => _getCurrentUser())
             .then(response => {

@@ -65,12 +65,10 @@ class LoginForm extends React.Component {
             isSubmitting: true,
         })
 
-        const data = {
-            email: this.state.email,
-            password: this.state.password,
-        }
-
-        this.props.userActions.userLogin(data);
+        const email = this.state.email;
+        const password = this.state.password;
+        
+        this.props.userActions.userLogin(email, password);
     }
 
     render() {

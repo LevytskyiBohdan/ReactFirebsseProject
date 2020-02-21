@@ -7,7 +7,7 @@ import * as modalActions from '../actions/modal';
 import * as userActions from '../actions/user';
 import * as fileUploadActions from '../actions/fileUpload';
 import ErrorMessage from './ErrorMessage';
-import FileUploader from './FileUploader';
+import FileUploader from './FileUploader/FileUploader';
 
 class SigninForm extends React.Component {
     constructor(props) {
@@ -21,8 +21,8 @@ class SigninForm extends React.Component {
             isSubmitting: false,
             invalidsinput: [],
         }
-        
-        this.inputsToValidate = ['email', 'password', 'rePassword', 'name', ];
+
+        this.inputsToValidate = ['email', 'password', 'rePassword', 'name',];
     }
 
     validate() {
@@ -32,9 +32,9 @@ class SigninForm extends React.Component {
         this.inputsToValidate.forEach(input => {
             let isInputValid = true;
 
-            if (input === 'rePassword'){
+            if (input === 'rePassword') {
                 isInputValid = this.state[input] && this.state[input] !== null && this.state[input].trim() !== '' && this.state.password === this.state.rePassword;
-            } 
+            }
             else {
                 isInputValid = this.state[input] && this.state[input] !== null && this.state[input].trim() !== '';
             }
@@ -84,20 +84,22 @@ class SigninForm extends React.Component {
             isSubmitting: true,
         })
 
-        const date = {
-            email: this.state.email,
-            password: this.state.password,
+
+        const email = this.state.email;
+        const password = this.state.password;
+
+        const data = {
             displayName: this.state.name,
             photoURL: this.state.photoURL[0],
         }
 
-        this.props.userActions.createUser(date)
+        this.props.userActions.createUser(email, password, data)
     }
 
     render() {
         return (<>
             <form>
-                <ErrorMessage 
+                <ErrorMessage
                     error={this.props.user.error}
                 />
                 <div className="form-group">
@@ -144,7 +146,7 @@ class SigninForm extends React.Component {
                 </div>
                 <div className="custom-file mb-4">
                     <FileUploader
-                        path="usersIMG"/>
+                        path="usersIMG" />
                 </div>
 
                 <button

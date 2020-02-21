@@ -8,7 +8,7 @@ const ModalView = ({ modal, modalActions }) => {
     return (
       <>
         <div className="modal fade show" style={{ background: "rgba(0,0,0,.5)", display: "block", }} aria-modal="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-lg">
 
             {modal.map((popap, idx) => (
               <div key={idx} className="modal-content">

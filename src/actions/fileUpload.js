@@ -3,30 +3,48 @@ import {
     FILE_UPLOAD_SUCCESS,
     FILE_UPLOAD_FAILURE,
     CLEAR_FILE_UPLOADER,
-    DELETE_FILE_FROM_UPLOADED,
-    CLEAR_ALL_ERROR,
+    GET_UPLOADED_FILES,
+    GET_UPLOADED_FILES_SUCCESS,
+    GET_UPLOADED_FILES_FAILURE,
+    SET_CHOSEN_FILES
 } from '../constants';
 
-import { firebaseFileUpload } from '../utils/firebaseStorage';
+import { firebaseFileUpload, firebaseGetUploadedFiles } from '../utils/firebaseStorage';
 
 const fileUploadAction = () => ({ type: FILE_UPLOAD });
 const fileUploadSuccessAction = response => ({ type: FILE_UPLOAD_SUCCESS, payload: response });
 const fileUploadErrorAction = err => ({ type: FILE_UPLOAD_FAILURE, payload: err });
 
-export function fileUpload(files, path) {
+export function fileUpload(files, path, userUid) {
     return dispatch => {
         dispatch(fileUploadAction());
         firebaseFileUpload(files, path)
-        .then(response => {
-            dispatch(fileUploadSuccessAction(response));
-        }).catch(err => {
-            dispatch(fileUploadErrorAction(err));
-        });
+            .then(response => {
+                dispatch(fileUploadSuccessAction(response));
+            }).catch(err => {
+                dispatch(fileUploadErrorAction(err));
+            });
 
     }
 }
 
+const getUploadedFilesAction = () => ({ type: GET_UPLOADED_FILES });
+const getUploadedFilesSuccessAction = response => ({ type: GET_UPLOADED_FILES_SUCCESS, payload: response });
+const getUploadedFilesErrorAction = err => ({ type: GET_UPLOADED_FILES_FAILURE, payload: err });
+
+export function getUploadedFiles(userUid) {
+    return dispatch => {
+        dispatch(getUploadedFilesAction());
+        firebaseGetUploadedFiles(`usersUploadedFiles/${userUid}`)
+            .then(response => {
+                dispatch(getUploadedFilesSuccessAction(response));
+            }).catch(err => {
+                dispatch(getUploadedFilesErrorAction(err));
+            });
+
+    }
+}
+
+export const setChosenFiles = response => ({ type: SET_CHOSEN_FILES, payload: response });
+
 export const clearFileUploader = () => ({ type: CLEAR_FILE_UPLOADER });
-
-export const deleteFileFromUploaded = idx => ({ type: DELETE_FILE_FROM_UPLOADED, payload: idx });
-

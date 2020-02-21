@@ -53,14 +53,9 @@ export function getById(collection, id) {
 
 }
 
-export function editById(data) {
+export function editById(collection, id, data) {
     return new Promise((resolve, reject) => {
-        const collection = data.collection;
-        const id = data.id;
-        
-        delete data.collection;
-        delete data.id;
-        console.log(data, id, collection)
+
         db.collection(collection).doc(id).set(data, { merge: true })
             .then(function () {
                 return resolve();
@@ -71,10 +66,9 @@ export function editById(data) {
     })
 }
 
-export function deleteById(data) {
+export function deleteById(collection, id) {
     return new Promise((resolve, reject) => {
-        console.log(data)
-        db.collection(data.collection).doc(data.id).delete().then(function () {
+        db.collection(collection).doc(id).delete().then(function () {
             return resolve();
 
         }).catch(function (error) {
@@ -84,11 +78,9 @@ export function deleteById(data) {
     })
 }
 
-export function createDocument(date) {
+export function createDocument(collection, date) {
     return new Promise((resolve, reject) => {
-        const collection = date.collection;
-
-        delete date.collection;
+        
         db.collection(collection).add(date)
             .then(function () {
                 return resolve();
@@ -99,14 +91,8 @@ export function createDocument(date) {
     })
 }
 
-export function createDocumentWithId(data) {
+export function createDocumentWithId(collection, id, data) {
     return new Promise((resolve, reject) => {
-        console.log(data)
-        const collection = data.collection;
-        const id = data.id;
-
-        delete data.collection;
-        delete data.id;
 
         db.collection(collection).doc(id).set(data)
         .then(function() {

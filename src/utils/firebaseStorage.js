@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import firebase from './firebase';
 
-function generateName(){
+function generateName() {
     return Math.random().toString(36).slice(2);
 }
 
@@ -49,9 +49,9 @@ export function firebaseFileUpload(files, path) {
                 }, function () {
                     uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
                         uriOfFiles.push(downloadURL);
-                        
+
                         filesUploaded++;
-                        
+
                         if (arrOfFiles.length === filesUploaded) {
                             resolve(uriOfFiles);
                         }
@@ -62,3 +62,25 @@ export function firebaseFileUpload(files, path) {
     })
 }
 
+
+export function firebaseGetUploadedFiles(path) {
+    return new Promise((resolve, reject) => {
+        const uriOfFiles = [];
+
+        return firebase.storage().ref().child(path).listAll().then(function (res) {
+
+            return res.items.forEach(function (itemRef) {
+                
+                return itemRef.getDownloadURL().then(uri => {
+                    uriOfFiles.push(uri);
+                    if (res.items.length === uriOfFiles.length) return resolve(uriOfFiles)
+                })
+                
+                
+            });
+
+        }).catch(function (error) {
+            return reject(error)
+        });
+    })
+}

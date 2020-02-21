@@ -1,7 +1,4 @@
 import firebase from "./firebase";
-import {
-    USER_LOGOUT_SUCCESS,
-} from '../constants';
 
 export function firebaseGetCurrentUser() {
     return new Promise((resolve, reject) => {
@@ -15,9 +12,9 @@ export function firebaseGetCurrentUser() {
     })
 }
 
-export function firebaseCreateUser(data) {
+export function firebaseCreateUser(email, password) {
     return new Promise((resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(user => {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
             
             return resolve(user);
         })
@@ -45,9 +42,9 @@ export function firebaseEditUser(userData) {
     })
 }
 
-export function firebaseAuth(user) {
+export function firebaseAuth(email, password) {
     return new Promise((resolve, reject) => {
-        firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(() => {
+        firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
             
             return resolve();
         })
