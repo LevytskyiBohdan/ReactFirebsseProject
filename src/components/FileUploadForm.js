@@ -12,7 +12,7 @@ class FileUploadForm extends React.Component {
         super(props);
 
         this.state = {
-            chosenFiles: this.props.chosenFiles || [],
+            chosenFiles: this.props.chosenFiles ? [...this.props.chosenFiles] : [],
         }
     }
     
@@ -24,7 +24,7 @@ class FileUploadForm extends React.Component {
         if (this.props.newFiles !== nextProps.newFiles) {
             this.props.fileUploadActions.getUploadedFiles(this.props.userUid)
         }
-
+        
         if (this.props.chosenFiles !== nextProps.chosenFiles) {
             this.props.modalActions.hideModal();
         }
@@ -51,7 +51,7 @@ class FileUploadForm extends React.Component {
                             key={idx}
                             src={img}
                             style={{ height: "100px", width: "100px" }}
-                            className="img-thumbnail mr-3"
+                            className="img-thumbnail mr-3 mb-3"
                             onClick={() => { this.setState({
                                 chosenFiles: [...this.state.chosenFiles, img]
                             }) }}
