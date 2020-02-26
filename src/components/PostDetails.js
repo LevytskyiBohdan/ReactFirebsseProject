@@ -18,7 +18,6 @@ const PostDetails = ({ post, user, pathname, postActions, usersActions, users, m
         postActions.getPost("posts", id)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
-    console.log(pathname.split("/")[2])
 
     return (post &&
         <>

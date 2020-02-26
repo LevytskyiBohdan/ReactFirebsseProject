@@ -14,7 +14,6 @@ export function firebaseGetCurrentUser() {
 
 export function firebaseCreateUser(email, password) {
     return new Promise((resolve, reject) => {
-        console.log(email.trim(), password)
         firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
             
             return resolve(user);

@@ -17,13 +17,10 @@ class FileUploadForm extends React.Component {
     }
     
     componentDidMount() {
-        console.log(this.props.state)
         this.props.fileUploadActions.getUploadedFiles(this.props.userUid)
     }
 
     componentDidUpdate(nextProps) {
-        console.log(this.props.state)
-
         if (this.props.newFiles !== nextProps.newFiles) {
             this.props.fileUploadActions.getUploadedFiles(this.props.userUid)
         }
