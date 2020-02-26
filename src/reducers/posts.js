@@ -23,7 +23,7 @@ export const initialState = {
     isLoading: false,
     isLoaded: false,
     error: null,
-    collection: [],
+    collection: null,
     status: null,
     postById: null,
 };
@@ -42,7 +42,7 @@ export default createReducer(initialState, {
         return {...state, isLoading: true, isLoaded: false, error: null, };
     },
     [CREATE_POST_SUCCESS]: (state) => {
-        return {...state, isLoading: false, isLoaded: true, };
+        return {...state, collection: [], isLoading: false, isLoaded: true, };
     },
     [CREATE_POST_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, };

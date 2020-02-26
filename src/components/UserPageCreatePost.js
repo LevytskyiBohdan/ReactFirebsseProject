@@ -31,7 +31,7 @@ class UserPageCreatePost extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!this.props.posts.error &&
-            this.props.posts !== prevProps.posts &&
+            this.props.posts.collection !== prevProps.posts.collection &&
             this.props.posts.isLoaded) {
                 
             this.props.fileUploadActions.clearFileUploader();
