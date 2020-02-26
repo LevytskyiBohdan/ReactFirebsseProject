@@ -21,7 +21,6 @@ class UserPageEditPost extends React.Component {
         this.state = {
             title: '',
             article: '',
-            img: [],
             clearUploader: false,
             publish: false,
             isCreating: false,
@@ -31,16 +30,6 @@ class UserPageEditPost extends React.Component {
     componentDidMount() {
         const id = this.props.pathname.split("/")[3];
         this.props.postActions.getPost("posts", id)
-    }
-
-    deletePreviewImg(id) {
-        const data = this.state.img;
-        
-        data.splice(id, 1)
-
-        this.setState({
-            img: [...data]
-        })
     }
 
     componentDidUpdate(prevProps) {
@@ -53,18 +42,17 @@ class UserPageEditPost extends React.Component {
                 publish: post.publish,
                 img: post.img || [],
             })
+
+            this.props.fileUploadActions.setChosenFiles(post.img)
         }
 
-        if (this.props.posts.collection !== prevProps.posts.collection) {
+        if (!this.props.posts.error &&
+            this.props.posts !== prevProps.posts &&
+            this.props.posts.isLoaded) {
+                
             this.props.fileUploadActions.clearFileUploader();
 
             this.props.push('/user/myPosts')
-        }
-
-        if (this.props.filesURI !== prevProps.filesURI) {
-            this.setState({
-                img: [...this.state.img, ...this.props.filesURI]
-            })
         }
     }
 
@@ -79,20 +67,13 @@ class UserPageEditPost extends React.Component {
 
 
         const date = {
-            collection: 'posts',
-            id: this.props.pathname.split("/")[3],
             title: this.state.title,
-            img: this.state.img,
+            img: this.props.chosenFiles,
             article: this.state.article,
             publish: this.state.publish,
-            query: {
-                name: 'userUid',
-                symbol: '==',
-                equal: this.props.user.uid,
-            },
         }
 
-        this.props.postsActions.editPost(date);
+        this.props.postsActions.editPost('posts', this.props.pathname.split("/")[3], date);
 
     }
 
@@ -141,22 +122,7 @@ class UserPageEditPost extends React.Component {
 
                                     <div className="form-group">
                                         <div className="custom-file">
-                                            <FileUploader clear={this.state.clearUploader} path="posts" />
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <div className="col-12 d-flex flex-nowrap flex-row align-items-start previewImg">
-                                            {this.state.img && this.state.img.map((img, idx) => (
-                                                <img
-                                                    key={idx}
-                                                    src={img}
-                                                    style={{height: "40px", width: "40px"}}
-                                                    className="img-thumbnail mr-3"
-                                                    onClick={() => { this.deletePreviewImg(idx) }}
-                                                ></img>
-
-                                            ))}
+                                            <FileUploader />
                                         </div>
                                     </div>
 
@@ -202,7 +168,7 @@ const mapStateToProps = state => ({
     post: state.post,
     user: state.user.currentUser,
     posts: state.posts,
-    filesURI: state.fileUpload.filesURI,
+    chosenFiles: state.fileUpload.chosenFiles,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -30,49 +30,49 @@ export const initialState = {
 
 export default createReducer(initialState, {
     [GET_POSTS]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null,};
     },
     [GET_POSTS_SUCCESS]: (state, payload) => {
-        return {...state,  isLoading: false, collection: [ ...payload ], isLoaded: true, status: GET_POSTS_SUCCESS, };
+        return {...state,  isLoading: false, collection: [ ...payload ], isLoaded: true, };
     },
     [GET_POSTS_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: GET_POSTS_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [CREATE_POST]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
-    [CREATE_POST_SUCCESS]: (state, payload) => {
-        return {...state, collection: [ ...payload ], isLoading: false, isLoaded: true, status: CREATE_POST_SUCCESS, };
+    [CREATE_POST_SUCCESS]: (state) => {
+        return {...state, isLoading: false, isLoaded: true, };
     },
     [CREATE_POST_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: CREATE_POST_FAILURE,};
+        return {...state, isLoading: false, error: err, };
     },
     [EDIT_POST]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
-    [EDIT_POST_SUCCESS]: (state, payload) => {
-        return {...state, collection: [ ...payload ], isLoading: false, isLoaded: true, status: EDIT_POST_SUCCESS, };
+    [EDIT_POST_SUCCESS]: (state) => {
+        return {...state, isLoading: false, isLoaded: true, };
     },
     [EDIT_POST_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: EDIT_POST_FAILURE,};
+        return {...state, isLoading: false, error: err, };
     },
     [DELETE_POST]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
-    [DELETE_POST_SUCCESS]: (state, payload) => {
-        return {...state, collection: [ ...payload ], isLoading: false, isLoaded: true, status: DELETE_POST_SUCCESS, };
+    [DELETE_POST_SUCCESS]: (state) => {
+        return {...state, isLoading: false, isLoaded: true, };
     },
     [DELETE_POST_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: DELETE_POST_FAILURE,};
+        return {...state, isLoading: false, error: err, };
     },
     [LIKE_COUNT]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
-    [LIKE_COUNT_SUCCESS]: (state, payload) => {
-        return {...state, isLoading: false, collection: [ ...payload ], isLoaded: true, status: LIKE_COUNT_SUCCESS, };
+    [LIKE_COUNT_SUCCESS]: (state) => {
+        return {...state, isLoading: false, isLoaded: true, };
     },
     [LIKE_COUNT_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: LIKE_COUNT_FAILURE,};
+        return {...state, isLoading: false, error: err, };
     },
     [CLEAR_ALL_ERROR]: (state) => {
         return { ...state, error: null, };

@@ -22,6 +22,9 @@ import {
     GET_USER_POSTS_FAILURE,
     CREAR_USER_ERROR,
     CLEAR_ALL_ERROR,
+    GET_USERS,
+    GET_USERS_SUCCESS,
+    GET_USERS_FAILURE,
 } from '../constants';
 
 import createReducer from '../utils/createReducer';
@@ -33,6 +36,7 @@ export const initialState = {
     currentUser: null,
     userPosts:null,
     status: null,
+    users: null,
 };
 
 export default createReducer(initialState, {
@@ -67,7 +71,7 @@ export default createReducer(initialState, {
         return {...state, isLoading: true, isLoaded: false, error: null, status: null, };
     },
     [CREATE_USER_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true, status: CREATE_USER_SUCCESS, };
+        return {...state, currentUser: { ...payload.user }, isLoading: false, isLoaded: true, status: CREATE_USER_SUCCESS, };
     },
     [CREATE_USER_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, status: CREATE_USER_FAILURE, };

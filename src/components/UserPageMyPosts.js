@@ -11,51 +11,38 @@ import ConfirmDelete from './ConfirmDelete';
 import "../css/UserPageMyPosts.css";
 
 class UserPageMyPosts extends React.Component {
-    componentDidMount() {
-        const query = {
-            name: 'userUid',
+    constructor(props) {
+        super(props);
+
+        this.query = {
+            name: 'owner',
             symbol: '==',
             equal: this.props.user.uid,
         }
-        this.props.userActions.getUserPosts('posts', query);
+    }
+    
+    componentDidMount() { 
+        this.props.userActions.getUserPosts('posts', this.query);
     }
 
     componentDidUpdate(nextProps) {
-        const query = {
-            name: 'userUid',
-            symbol: '==',
-            equal: this.props.user.uid,
-        }
-
         if (this.props.posts !== nextProps.posts) {
-            this.props.userActions.getUserPosts('posts', query);
+            this.props.userActions.getUserPosts('posts', this.query);
             this.props.modalActions.hideModal();
         }
     }
 
     onDelete(article) {
         this.props.modalActions.showModal(
-            <Modal
-                content={<ConfirmDelete
-                    action={() => this.props.postsActions.deletePost({
-                        collection: "posts",
-                        id: article.id,
-                        query: {
-                            name: 'userUid',
-                            symbol: '==',
-                            equal: this.props.user.uid,
-                        },
-                    })}
-                />}
-                title="Login" closeAction={[this.props.modalActions.hideModal]} />
-
-        );
+            <ConfirmDelete
+                action={() => this.props.postsActions.deletePost("posts", article.id)}
+            />);
     }
 
     render() {
         return (
             <div className="row userPosts">
-                {this.props.userPosts && this.props.isLoaded && 
+                {this.props.userPosts && this.props.isLoaded &&
                     this.props.userPosts.map((article, idx) =>
                         (
                             <div key={idx} className="col-12 col-12 col-sm-6 col-md-4 mb-3 posts">
@@ -64,10 +51,6 @@ class UserPageMyPosts extends React.Component {
                                     <div className="card-body">
                                         <h5 className="card-title">{article.title}</h5>
                                         <p className="card-text">{article.article}</p>
-                                        <h6 className="card-title">
-                                            <span className="text-muted">Author: </span>
-                                            {article.author}
-                                        </h6>
                                         <Link
                                             className="btn btn-block btn-primary"
                                             to={`/post/${article.id}`}
@@ -77,6 +60,7 @@ class UserPageMyPosts extends React.Component {
                                             className="btn btn-block btn-warning"
                                             to={`/user/editPost/${article.id}`}
                                         >Edit</Link>
+                                        
                                         <button
                                             type="button"
                                             className="btn btn-block btn-danger"
@@ -98,7 +82,7 @@ const mapStateToProps = state => ({
     user: state.user.currentUser,
     isLoaded: state.user.isLoaded,
     userPosts: state.user.userPosts,
-    posts: state.posts.collection,
+    posts: state.posts,
 });
 
 const mapDispatchToProps = dispatch => ({

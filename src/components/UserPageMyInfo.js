@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import * as usersActions from '../actions/users';
 import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
 import * as modalActions from '../actions/modal';
 import ConfirmDeleteUser from './ConfirmDeleteUser';
-import Modal from './Modal';
 import UserEditForm from './UserEditForm';
 
 class UserPageMyInfo extends React.Component {
@@ -20,18 +20,11 @@ class UserPageMyInfo extends React.Component {
 
     editUser() {
         this.props.modalActions.showModal(
-            <Modal
-                content={<UserEditForm
-                    title="Do you want delete your account?"
-                    button="Delete"
-                    actionData={null}
-                    action={this.props.userActions.deleteUser}
-                />}
-                title="Edit user" closeAction={[
-                    this.props.modalActions.hideModal,
-                    this.props.userActions.clearUserError
-                ]} />
-
+            <UserEditForm
+                title="Do you want delete your account?"
+                button="Delete"
+                actionData={null}
+                action={this.props.userActions.deleteUser} />
         );
     }
 
@@ -78,6 +71,7 @@ const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
     postsActions: bindActionCreators(postsActions, dispatch),
     modalActions: bindActionCreators(modalActions, dispatch),
+    usersActions: bindActionCreators(usersActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserPageMyInfo));

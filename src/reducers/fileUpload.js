@@ -44,7 +44,7 @@ export default createReducer(initialState, {
         return { ...state, chosenFiles: payload };
     },
     [CLEAR_FILE_UPLOADER]: (state) => {
-        return { ...state, isLoading: false, isLoaded: false, error: null, filesURI: null, };
+        return { ...state, isLoading: false, isLoaded: false, error: null, filesURI: null, chosenFiles: null, };
     },
     [CLEAR_ALL_ERROR]: (state) => {
         return { ...state, error: null, };

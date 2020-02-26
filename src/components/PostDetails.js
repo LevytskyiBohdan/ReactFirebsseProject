@@ -1,31 +1,54 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import * as postActions from '../actions/post';
+import * as usersActions from '../actions/users';
 import { bindActionCreators } from 'redux';
 import '../css/postDetails.css';
 
+const setAuthor = (uid, users) => {
+    return users.map(user => {
+        return user.uid === uid ? user.displayName : null;
+    })
+}
 
-const PostDetails = ({post, postActions, match: { params: { id }}}) => {
+const PostDetails = ({ post, user, pathname, postActions, usersActions, users, match: { params: { id } } }) => {
     React.useEffect(() => {
+        usersActions.getUsers()
         postActions.getPost("posts", id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
+    console.log(pathname.split("/")[2])
 
-        return (post &&
+    return (post &&
+        <>
+
+
             <div className="container postDetails">
                 <div className="row">
                     <div className="col-12">
                         <div className="imgTop" style={{ background: `url(${post.img[0]})` }}></div>
-                        <h1>{post.title}</h1>
+
+                        {(user.currentUser && post.owner === user.currentUser.uid) ?
+                            <Link to={`/user/editPost/${pathname.split("/")[2]}`}>
+                                <h1 className="editIcon">{post.title}</h1>
+                            </Link>
+                            :
+                            <h1>{post.title}</h1>}
+
+
                         <p>{post.article}</p>
-                        <h6>Author: {post.author}</h6>
+
+                        {users &&
+                            <h6>Author: {setAuthor(user.currentUser.uid, users)}</h6>
+                        }
+
                         <div className="row mt-5">
 
                             {
                                 post.img.map((img, idx) => (
                                     <div key={idx} className="col-12 col-lg-6 mb-4">
-                                        <img src={img} className="img-fluid rounded w-100" style={{height: "25vh"}} alt="Responsive" />
+                                        <img src={img} className="img-fluid rounded w-100" style={{ height: "25vh" }} alt="Responsive" />
                                     </div>
                                 ))
                             }
@@ -35,16 +58,21 @@ const PostDetails = ({post, postActions, match: { params: { id }}}) => {
                     </div>
                 </div>
             </div>
-        )
+        </>
+    )
 }
 
 const mapStateToProps = state => ({
+    pathname: state.router.location.pathname,
     post: state.post.postById,
     location: state.router.location.pathname,
+    user: state.user,
+    users: state.users.users,
 });
 
 const mapDispatchToProps = dispatch => ({
     postActions: bindActionCreators(postActions, dispatch),
+    usersActions: bindActionCreators(usersActions, dispatch),
     // postsActions: bindActionCreators(postsActions, dispatch),
 });
 

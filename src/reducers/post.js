@@ -11,7 +11,6 @@ export const initialState = {
     isLoading: false,
     isLoaded: false,
     error: null,
-    collection: [],
     status: null,
     postById: null,
 };

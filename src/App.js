@@ -6,6 +6,7 @@ import Header from './components/Header';
 import ModalView from './views/ModalView';
 import routes from './router'
 import './App.css';
+import Loader from './components/Loader';
 
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router';
@@ -19,11 +20,13 @@ class App extends React.Component {
       <>
         <Provider store={store}>
             <ConnectedRouter history={history}>
-              <>
+              
+              <Loader>
                 <ModalView />
                 <Header />
                 {routes}
-              </>
+              </Loader>
+
             </ConnectedRouter>
         </Provider>
       </>

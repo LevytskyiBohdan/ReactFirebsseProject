@@ -14,6 +14,7 @@ export function firebaseGetCurrentUser() {
 
 export function firebaseCreateUser(email, password) {
     return new Promise((resolve, reject) => {
+        console.log(email.trim(), password)
         firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
             
             return resolve(user);
@@ -67,10 +68,9 @@ export function firebaseAuthLogout() {
     })
 }
 
-export function firebaseDeleteUser(data) {
+export function firebaseDeleteUser(email, password) {
     return new Promise((resolve, reject) => {
-        // return resolve()
-        firebaseAuth(data).then(() => {
+        firebaseAuth(email, password).then(() => {
             const user = firebase.auth().currentUser;
                 user.delete().then(function () {
                     return resolve();

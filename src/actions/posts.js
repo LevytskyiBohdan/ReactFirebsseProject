@@ -14,7 +14,6 @@ import {
     DELETE_POST,
     DELETE_POST_SUCCESS,
     DELETE_POST_FAILURE,
-    CLEAR_ALL_ERROR,
 } from '../constants';
 
 import { editById, createDocument, deleteById, getCollectionWithQuery } from '../utils/firebaseDB';
@@ -40,12 +39,12 @@ const createPostAction = () => ({ type: CREATE_POST });
 const createPostSuccessAction = response => ({ type: CREATE_POST_SUCCESS, payload: response });
 const createPostErrorAction = err => ({ type: CREATE_POST_FAILURE, payload: err });
 
-export function createPost(data) {
+export function createPost(collection, date) {
     return dispatch => {
         dispatch(createPostAction());
-        createDocument(data)
-        .then(response => {
-            dispatch(createPostSuccessAction(response));
+        createDocument(collection, date)
+        .then(() => {
+            dispatch(createPostSuccessAction());
         }).catch(err => {
             dispatch(createPostErrorAction(err));
         });
@@ -57,12 +56,12 @@ const editPostAction = () => ({ type: EDIT_POST });
 const editPostSuccessAction = response => ({ type: EDIT_POST_SUCCESS, payload: response });
 const editPostErrorAction = err => ({ type: EDIT_POST_FAILURE, payload: err });
 
-export function editPost(data) {
+export function editPost(collection, id, data) {
     return dispatch => {
         dispatch(editPostAction());
-        editById(data)
-        .then(response => {
-            dispatch(editPostSuccessAction(response));
+        editById(collection, id, data)
+        .then(() => {
+            dispatch(editPostSuccessAction());
         }).catch(err => {
             dispatch(editPostErrorAction(err));
         });
@@ -74,12 +73,12 @@ const deletePostAction = () => ({ type: DELETE_POST });
 const deletePostSuccessAction = response => ({ type: DELETE_POST_SUCCESS, payload: response });
 const deletePostErrorAction = err => ({ type: DELETE_POST_FAILURE, payload: err });
 
-export function deletePost(data) {
+export function deletePost(collection, id) {
     return dispatch => {
         dispatch(deletePostAction());
-        deleteById(data)
-        .then(response => {
-            dispatch(deletePostSuccessAction(response));
+        deleteById(collection, id)
+        .then(() => {
+            dispatch(deletePostSuccessAction());
         }).catch(err => {
             dispatch(deletePostErrorAction(err));
         });
@@ -91,12 +90,17 @@ const likeCountAction = () => ({ type: LIKE_COUNT });
 const likeCountSuccessAction = response => ({ type: LIKE_COUNT_SUCCESS, payload: response });
 const likeCountErrorAction = err => ({ type: LIKE_COUNT_FAILURE, payload: err });
 
-export function likeCount(data) {
+export function likeCount(collection, id, data) {
     return dispatch => {
         dispatch(likeCountAction());
-        editById(data)
+        editById(collection, id, data)
         .then(response => {
             dispatch(likeCountSuccessAction(response));
+            dispatch(getPosts('posts', {
+                name: 'publish',
+                symbol: '==',
+                equal: true,
+            }));
         }).catch(err => {
             dispatch(likeCountErrorAction(err));
         });

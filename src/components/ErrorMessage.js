@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class ErrorMessage extends React.Component {
     render() {
         const error = this.props.error;
-        return (error && error !== "GET_USER_FAILURE" &&
+        return (error &&
         <>
             <div className="alert alert-danger" role="alert">
                 {(error.errorCode || error.errorMessage) ? 
@@ -13,7 +13,7 @@ class ErrorMessage extends React.Component {
                     <p>{error.errorMessage}</p>
                 </>) : 
                 (<p>
-                    {error}
+                    {String(error)}
                 </p>)
                 }
             </div>

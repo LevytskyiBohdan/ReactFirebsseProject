@@ -23,16 +23,9 @@ import {
     CREAR_USER_ERROR,
 } from '../constants';
 
-import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseDeleteUser, } from '../utils/firebaseUser';
-import { getCollectionWithQuery, createDocumentWithId, getById, editById, deleteById } from '../utils/firebaseDB';
 
-function _getCurrentUser() {
-    return firebaseGetCurrentUser()
-        .then(user =>
-            getById('users', user.uid)
-                .then(res => Object.assign({}, user, res))
-        )
-}
+import { firebaseAuth, firebaseAuthLogout, firebaseGetCurrentUser, firebaseCreateUser, firebaseDeleteUser, firebaseEditUser } from '../utils/firebaseUser';
+import { getCollectionWithQuery, } from '../utils/firebaseDB';
 
 const userLoginAction = () => ({ type: USER_LOGIN });
 const userLogedAction = response => ({ type: USER_LOGIN_SUCCESS, payload: response });
@@ -42,7 +35,7 @@ export function userLogin(email, password) {
     return dispatch => {
         dispatch(userLoginAction());
         firebaseAuth(email, password)
-            .then(() => _getCurrentUser())
+            .then(() => firebaseGetCurrentUser())
             .then(response => {
                 dispatch(userLogedAction(response));
             }).catch(err => {
@@ -77,12 +70,12 @@ const getUserError = err => ({ type: GET_USER_FAILURE, payload: err });
 export function getCurrentUser() {
     return dispatch => {
         dispatch(getUser());
-        _getCurrentUser()
+        firebaseGetCurrentUser()
             .then(response => {
-            dispatch(getUserSuccess(response));
-        }).catch(err => {
-            dispatch(getUserError(err));
-        });
+                dispatch(getUserSuccess(response));
+            }).catch(err => {
+                dispatch(getUserError(err));
+            });
 
     }
 }
@@ -91,14 +84,10 @@ const createUserReq = () => ({ type: CREATE_USER });
 const createUserSuccess = response => ({ type: CREATE_USER_SUCCESS, payload: response });
 const createUserError = err => ({ type: CREATE_USER_FAILURE, payload: err });
 
-export function createUser(email, password, data) {
+export function createUser(email, password) {
     return dispatch => {
         dispatch(createUserReq());
-        firebaseCreateUser(password, email)
-            .then(user => {
-                return createDocumentWithId('users', user.user.id, data)
-            })
-            .then(() => _getCurrentUser())
+        firebaseCreateUser(email, password)
             .then(response => {
                 dispatch(createUserSuccess(response));
             }).catch(err => {
@@ -114,8 +103,8 @@ const editUserError = err => ({ type: EDIT_USER_FAILURE, payload: err });
 export function editUser(data) {
     return dispatch => {
         dispatch(editUserReq());
-        editById(data)
-            .then(() => _getCurrentUser())
+        firebaseEditUser(data)
+            .then(() => firebaseGetCurrentUser())
             .then(response => {
                 dispatch(editUserSuccess(response));
             }).catch(err => {
@@ -128,16 +117,12 @@ const deleteUserReq = () => ({ type: DELETE_USER });
 const deleteUserSuccess = response => ({ type: DELETE_USER_SUCCESS, payload: response });
 const deleteUserError = err => ({ type: DELETE_USER_FAILURE, payload: err });
 
-export function deleteUser(data) {
+export function deleteUser(email, password) {
     return dispatch => {
         dispatch(deleteUserReq());
-        deleteById(data)
-        .then(() => firebaseDeleteUser({
-            email: data.email,
-            password: data.password,
-        }))
-            .then(response => {
-                dispatch(deleteUserSuccess(response));
+        firebaseDeleteUser(email, password)
+            .then(() => {
+                dispatch(deleteUserSuccess(null));
             }).catch(err => {
                 dispatch(deleteUserError(err));
             });
@@ -161,3 +146,5 @@ export function getUserPosts(collection, query) {
 }
 
 export const clearUserError = () => ({ type: CREAR_USER_ERROR });
+
+

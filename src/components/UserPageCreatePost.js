@@ -1,18 +1,16 @@
 /* eslint-disable default-case */
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import * as userActions from '../actions/user';
+import * as usersActions from '../actions/users';
 import * as postsActions from '../actions/posts';
 import * as postActions from '../actions/post';
 import * as modalActions from '../actions/modal';
 import * as fileUploadActions from '../actions/fileUpload';
 import FileUploader from './FileUploader';
 import InfoMessage from './InfoMessage';
-import ErrorMessage from './ErrorMessage';
-import { CREATE_POST_SUCCESS, CREATE_POST_FAILURE } from '../constants';
 
 class UserPageCreatePost extends React.Component {
     constructor(props) {
@@ -21,21 +19,29 @@ class UserPageCreatePost extends React.Component {
         this.state = {
             title: '',
             article: '',
-            clearUploader: false,
             publish: false,
             isCreating: false,
+            createSaccess: false,
         }
     }
 
+    componentDidMount() {
+        this.props.usersActions.getUsers()
+    }
+
     componentDidUpdate(prevProps) {
-        if (this.props.posts.collection !== prevProps.posts.collection) {
+        if (!this.props.posts.error &&
+            this.props.posts !== prevProps.posts &&
+            this.props.posts.isLoaded) {
+                
             this.props.fileUploadActions.clearFileUploader();
 
             this.setState({
                 title: '',
                 article: '',
-                clearUploader: true,
+                publish: false,
                 isCreating: false,
+                createSaccess: true,
             })
 
         }
@@ -51,44 +57,28 @@ class UserPageCreatePost extends React.Component {
         })
 
         const date = {
-            collection: 'posts',
-            query: {
-                name: 'userUid',
-                symbol: '==',
-                equal: this.props.user.uid,
-            },
-            author: this.props.user.displayName,
+            owner: this.props.user.uid,
             title: this.state.title,
-            img: this.props.filesURI,
+            img: this.props.chosenFiles,
             article: this.state.article,
-            email: this.props.user.email,
-            userUid: this.props.user.uid,
             publish: this.state.publish,
             likes: {
                 count: 0,
                 users: [],
-            },
+            }
         }
-        
 
-        this.props.postsActions.createPost(date);
+        this.props.postsActions.createPost('posts', date);
 
-    }
-
-    showStatusMessage() {
-        switch (this.props.posts.status) {
-            case CREATE_POST_SUCCESS:
-                return <InfoMessage message="Post was created." />;
-            case CREATE_POST_FAILURE:
-                return <ErrorMessage error={this.props.posts.error} />
-
-        }
     }
 
     render() {
         return (
             <form>
-                {this.showStatusMessage()}
+                {this.state.createSaccess && (
+                    <InfoMessage message="Post was created." />
+                )}
+
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
@@ -114,7 +104,7 @@ class UserPageCreatePost extends React.Component {
 
                 <div className="form-group">
                     <div className="custom-file">
-                        <FileUploader clear={this.state.clearUploader} path="posts" />
+                        <FileUploader />
                     </div>
                 </div>
 
@@ -147,11 +137,12 @@ class UserPageCreatePost extends React.Component {
 const mapStateToProps = state => ({
     user: state.user.currentUser,
     posts: state.posts,
-    filesURI: state.fileUpload.filesURI,
+    chosenFiles: state.fileUpload.chosenFiles,
 });
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
+    usersActions: bindActionCreators(usersActions, dispatch),
     postsActions: bindActionCreators(postsActions, dispatch),
     postActions: bindActionCreators(postActions, dispatch),
     fileUploadActions: bindActionCreators(fileUploadActions, dispatch),

@@ -31,6 +31,10 @@ export const HIDE_MODAL = 'HIDE_POPAP';
 
 export const CREAR_USER_ERROR = 'CREAR_USER_ERROR';
 
+export const GET_USERS = 'GET_USERS';
+export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
+export const GET_USERS_FAILURE = 'GET_USERS_FAILURE';
+
 // --------------------FirebaseDB
 
 export const GET_POSTS = 'GET_POSTS';

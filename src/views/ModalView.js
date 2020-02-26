@@ -11,7 +11,9 @@ const ModalView = ({ modal, modalActions }) => {
           <div className="modal-dialog modal-lg">
 
             {modal.map((popap, idx) => (
-              <div key={idx} className="modal-content">
+              <div key={idx} className="modal-content"
+                style={{display: `${idx===modal.length-1 ? 'block' : 'none'}`}}
+              >
                 <div className="modal-header">
                   <button
                     type="button"
@@ -28,7 +30,6 @@ const ModalView = ({ modal, modalActions }) => {
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </>

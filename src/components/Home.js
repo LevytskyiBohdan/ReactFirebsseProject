@@ -5,9 +5,15 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import LikePost from './LikePost';
 import * as userActions from '../actions/user';
+import * as usersActions from '../actions/users';
 import * as postsActions from '../actions/posts';
 import '../css/Home.css';
 
+const setAuthor = (uid, users) => {
+    return users.map(user => {
+        return user.uid === uid ? user.displayName : null;
+    }) 
+}
 
 const Home = (props) => {
     const [posts, setPosts] = React.useState(null);
@@ -19,9 +25,21 @@ const Home = (props) => {
     }
 
     React.useEffect(() => {
-        props.postsActions.getPosts('posts', query)
-        setPosts(props.articles)
+        props.usersActions.getUsers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    React.useEffect(() => {
+        props.postsActions.getPosts('posts', query)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    React.useEffect(() => {
+        if (!props.posts.isLoading && props.posts.isLoaded) {
+            setPosts(props.posts.collection)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.posts])
 
     return (
         <div className="container-fluid home">
@@ -29,8 +47,8 @@ const Home = (props) => {
                 <div className="col-12 top"></div>
             </div>
             <div className="row">
-                {props.articles &&
-                    props.articles.map((article, idx) =>(
+                {posts &&
+                    posts.map((article, idx) =>(
                     <div key={idx} className="col-12 col-12 col-sm-6 col-md-4 mb-3 posts">
                                 <div className="card pt-3">
                                     <img src={article.img} className="card-img-top" alt="..." />
@@ -39,17 +57,14 @@ const Home = (props) => {
                                         <p className="card-text">{article.article}</p>
                                         <h6 className="card-title">
                                             <span className="text-muted">Author: </span>
-                                            {article.author}
+                                            { props.users.users && setAuthor(article.owner, props.users.users) }
                                         </h6>
                                         <Link
                                             className="btn btn-block btn-primary"
                                             to={`/post/${article.id}`}
                                         >read more...</Link>
-                                        <LikePost
-                                            query={query}
-                                            likes={article.likes}
-                                            postId={article.id}
-                                        />
+                                        
+                                        <LikePost postId={article.id} likes={article.likes}/>
                                     </div>
                                 </div>
                             </div>
@@ -61,11 +76,13 @@ const Home = (props) => {
 }
 
 const mapStateToProps = state => ({
-    articles: state.posts.collection,
+    posts: state.posts,
+    users: state.users,
 });
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
+    usersActions: bindActionCreators(usersActions, dispatch),
     postsActions: bindActionCreators(postsActions, dispatch),
 });
 

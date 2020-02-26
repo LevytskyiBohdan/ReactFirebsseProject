@@ -22,7 +22,7 @@ class SigninForm extends React.Component {
             invalidsinput: [],
         }
 
-        this.inputsToValidate = ['email', 'password', 'rePassword', 'name',];
+        this.inputsToValidate = ['email', 'password', 'rePassword',];
     }
 
     validate() {
@@ -58,6 +58,14 @@ class SigninForm extends React.Component {
 
     componentDidUpdate(nextProps) {
         if (this.props.user.currentUser !== nextProps.user.currentUser) {
+            this.setState({
+                isSubmitting: false,
+            })
+        }
+
+        if (this.props.user.currentUser &&
+            this.props.user.currentUser.displayName &&
+            this.props.user.currentUser.displayName !== nextProps.user.currentUser.displayName) {
             this.props.modalActions.hideModal();
             this.props.fileUploadActions.clearFileUploader();
         }
@@ -65,14 +73,6 @@ class SigninForm extends React.Component {
         if (this.props.user.error && this.props.user.error !== nextProps.user.error) {
             this.setState({
                 isSubmitting: false,
-            })
-        }
-
-        if (this.props.filesURI !== nextProps.filesURI) {
-            this.validate();
-
-            this.setState({
-                photoURL: this.props.filesURI,
             })
         }
     }
@@ -84,24 +84,30 @@ class SigninForm extends React.Component {
             isSubmitting: true,
         })
 
-
         const email = this.state.email;
         const password = this.state.password;
 
-        const data = {
-            displayName: this.state.name,
-            photoURL: this.state.photoURL[0],
-        }
-
-        this.props.userActions.createUser(email, password, data)
+        this.props.userActions.createUser(email, password)
     }
 
-    render() {
-        return (<>
-            <form>
-                <ErrorMessage
-                    error={this.props.user.error}
-                />
+    onDone() {
+        if (this.state.isSubmitting) return null;
+
+        this.setState({
+            isSubmitting: true,
+        })
+
+        const data = {
+            displayName: this.state.name,
+            photoURL: this.props.chosenFiles[0],
+        }
+
+        this.props.userActions.editUser(data);
+    }
+
+    renderSingIn() {
+        if (!this.props.user.currentUser) {
+            return (<>
                 <div className="form-group">
                     <label htmlFor="email">Email address</label>
                     <input
@@ -135,26 +141,64 @@ class SigninForm extends React.Component {
                         }}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        className={`form-control ${this.isValidInput('name') ? "is-invalid" : ""}`}
-                        id="name"
-                        onChange={evt => { this.setState({ name: evt.target.value }) }}
-                    />
-                </div>
-                <div className="custom-file mb-4">
-                    <FileUploader
-                        path="usersIMG" />
-                </div>
 
-                <button
-                    type="button"
-                    className="btn btn-block btn-primary"
-                    onClick={() => { this.onSubmit() }}
-                    disabled={this.state.isSubmitting}
-                >Singin</button>
+                <div className="form-group">
+                    <button
+                        type="button"
+                        className="btn btn-block btn-primary"
+                        onClick={() => { this.onSubmit() }}
+                        disabled={this.state.isSubmitting}
+                    >Singin</button>
+                </div>
+            </>
+            );
+        }
+
+        return null;
+    }
+
+    renserAddDataToUser() {
+        if (this.props.user.currentUser) {
+            return (
+                <>
+                    <div className="form-group">
+                        <label htmlFor="name">Name</label>
+                        <input
+                            type="text"
+                            className={`form-control ${this.isValidInput('name') ? "is-invalid" : ""}`}
+                            id="name"
+                            onChange={evt => { this.setState({ name: evt.target.value }) }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <div className="custom-file mb-4">
+                            <FileUploader />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <button
+                            type="button"
+                            className="btn btn-block btn-primary"
+                            onClick={() => { this.onDone() }}
+                            disabled={this.state.isSubmitting}
+                        >Finish</button>
+                    </div>
+                </>
+            )
+        }
+    }
+
+    render() {
+        return (<>
+            <form>
+                <ErrorMessage
+                    error={this.props.user.error}
+                />
+
+                {this.renderSingIn()}
+
+                {this.renserAddDataToUser()}
+
             </form>
         </>)
     }
@@ -166,7 +210,7 @@ SigninForm.propTypes = {
 
 const mapStateToProps = state => ({
     user: state.user,
-    filesURI: state.fileUpload.filesURI,
+    chosenFiles: state.fileUpload.chosenFiles,
 });
 
 const mapDispatchToProps = dispatch => ({

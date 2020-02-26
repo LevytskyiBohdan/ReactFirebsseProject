@@ -25,16 +25,19 @@ const auth = admin.auth();
  */
 const getAllUsers = (req, res) => {
   const maxResults = 1; // optional arg.
+  res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
 
   auth.listUsers().then((userRecords) => {
     let users = [];
 
     userRecords.users.forEach((user) => {
-        console.log(user.toJSON())
         users.push(user.toJSON())
     });
     res.send(users);
-  }).catch((error) => console.log(error));
+  }).catch((error) => { 
+      console.log(error)
+      res.send(error);
+    });
 };
 
 module.exports = {

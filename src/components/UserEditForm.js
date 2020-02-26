@@ -46,15 +46,11 @@ class UserEditForm extends React.Component {
             case "name":
                 Object.assign(date, {
                     displayName: this.state.name,
-                    id: this.props.user.currentUser.uid, 
-                    collection: 'users',
                 })
                 break;
             case "img":
                 Object.assign(date, { 
-                    id: this.props.user.currentUser.uid, 
-                    collection: 'users',
-                    photoURL: this.props.filesURI[0] 
+                    photoURL: this.props.chosenFiles[0] 
                 })
                 break;
         }
@@ -66,8 +62,10 @@ class UserEditForm extends React.Component {
         switch (this.state.isChangeField) {
             case "img":
                 return (
-                    <div className="custom-file mb-4">
-                        <FileUploader path="usersIMG" />
+                    <div className="form-group">
+                        <div className="custom-file mb-4">
+                            <FileUploader />
+                        </div>
                     </div>
                 )
             case "name":
@@ -125,7 +123,7 @@ class UserEditForm extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.user,
-    filesURI: state.fileUpload.filesURI,
+    chosenFiles: state.fileUpload.chosenFiles,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -8,9 +8,6 @@ function generateName() {
 
 export function firebaseFileUpload(files, path) {
     return new Promise((resolve, reject) => {
-        var metadata = {
-            contentType: 'image/jpeg'
-        };
         let uriOfFiles = [];
 
         let filesUploaded = 0;
@@ -22,7 +19,7 @@ export function firebaseFileUpload(files, path) {
 
             uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function (snapshot) {
-                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    // var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     // console.log('Upload is ' + progress + '% done');
                     switch (snapshot.state) {
                         case firebase.storage.TaskState.PAUSED: // or 'paused'

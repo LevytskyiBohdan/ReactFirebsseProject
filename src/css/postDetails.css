@@ -4,3 +4,17 @@
     background-size: 100%!important;
     height: 150px;
 }
+
+.postDetails .editIcon {
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+}
+
+.postDetails .editIcon:hover::after {
+    content: url(../static/pencil-alt-solid.svg);
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-left: 10px;
+}

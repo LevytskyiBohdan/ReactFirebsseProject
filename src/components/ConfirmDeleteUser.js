@@ -19,7 +19,7 @@ class ConfirmDeleteUser extends React.Component {
         }
     }
     
-    componentDidUpdate(nextProps, nextState) {
+    componentDidUpdate(nextProps) {
         if (nextProps.user.currentUser !== this.props.user.currentUser) {
             this.props.modalActions.hideModal();
             this.props.push('/');
@@ -27,12 +27,7 @@ class ConfirmDeleteUser extends React.Component {
     }
 
     deleteUser() {
-        this.props.userActions.deleteUser({
-            email: this.state.email,
-            password: this.state.password,
-            id: this.props.user.currentUser.uid,
-            collection: "users",
-        })
+        this.props.userActions.deleteUser( this.state.email, this.state.password);
     }
 
     render() {
