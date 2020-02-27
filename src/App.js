@@ -19,15 +19,15 @@ class App extends React.Component {
     return (
       <>
         <Provider store={store}>
-            <ConnectedRouter history={history}>
-              
-              <Loader>
-                <ModalView />
-                <Header />
-                {routes}
-              </Loader>
+          <ConnectedRouter history={history}>
 
-            </ConnectedRouter>
+            <Loader>
+              <ModalView />
+              <Header />
+              {routes}
+            </Loader>
+
+          </ConnectedRouter>
         </Provider>
       </>
     );

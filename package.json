@@ -41,5 +41,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "html-react-parser": "^0.10.1",
+    "redux-state-loader": "^0.1.6"
   }
 }
