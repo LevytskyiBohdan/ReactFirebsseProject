@@ -58,6 +58,7 @@ class UserPageCreatePost extends React.Component {
 
         const date = {
             owner: this.props.user.uid,
+            author: this.props.user.displayName,
             title: this.state.title,
             img: this.props.chosenFiles,
             article: this.state.article,
