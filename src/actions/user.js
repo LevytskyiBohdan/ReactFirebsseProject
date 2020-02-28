@@ -100,14 +100,29 @@ const editUserReq = () => ({ type: EDIT_USER });
 const editUserSuccess = response => ({ type: EDIT_USER_SUCCESS, payload: response });
 const editUserError = err => ({ type: EDIT_USER_FAILURE, payload: err });
 
-export function editUser(data) {
+export function editUser(userUid, data) {
     return dispatch => {
         dispatch(editUserReq());
         firebaseEditUser(data)
+            .then(() => {
+                if (userUid) {
+                    return fetch('https://us-central1-react-firebase-project-f71c4.cloudfunctions.net/changePostsAutor', {
+                        method: 'POST',
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ owner: userUid, newName: data.displayName })
+                    })
+                }
+            })
             .then(() => firebaseGetCurrentUser())
             .then(response => {
                 dispatch(editUserSuccess(response));
-            }).catch(err => {
+            })
+            .catch(err => {
                 dispatch(editUserError(err));
             });
     }

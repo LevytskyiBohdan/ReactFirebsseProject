@@ -48,6 +48,9 @@ const getAllUsers = (req, res) => {
 };
 
 const changePostsAutor = (req, res) => {
+  res.set('Access-Control-Allow-Headers', 'X-Custom-Header, Upgrade-Insecure-Requests, Accept, Content-Type');
+  res.set('Access-Control-Allow-Origin', '*');
+
   new Promise((resolve, reject) => {
     db.collection('posts').where('owner', '==', req.body.owner)
       .get()

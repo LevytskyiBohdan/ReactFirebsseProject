@@ -55,7 +55,7 @@ class UserEditForm extends React.Component {
                 break;
         }
 
-        this.props.userActions.editUser(date)
+        this.props.userActions.editUser(this.props.user.currentUser.uid, date)
     }
 
     renderInputs() {
