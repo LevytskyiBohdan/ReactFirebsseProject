@@ -9,12 +9,6 @@ import * as usersActions from '../actions/users';
 import * as postsActions from '../actions/posts';
 import '../css/Home.css';
 
-const setAuthor = (uid, users) => {
-    return users.map(user => {
-        return user.uid === uid ? user.displayName : null;
-    }) 
-}
-
 const Home = (props) => {
     const [posts, setPosts] = React.useState(null);
 
@@ -23,11 +17,6 @@ const Home = (props) => {
         symbol: '==',
         equal: true,
     }
-
-    React.useEffect(() => {
-        props.usersActions.getUsers()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     React.useEffect(() => {
         props.postsActions.getPosts('posts', query)
@@ -57,7 +46,7 @@ const Home = (props) => {
                                         <p className="card-text">{article.article}</p>
                                         <h6 className="card-title">
                                             <span className="text-muted">Author: </span>
-                                            { props.users.users && setAuthor(article.owner, props.users.users) }
+                                            { article.author }
                                         </h6>
                                         <Link
                                             className="btn btn-block btn-primary"
