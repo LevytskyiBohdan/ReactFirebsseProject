@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxLoaderActions } from 'redux-state-loader';
-// import * as constants from '../constants';
 import '../css/Loader.css';
 
 const registerAction = reduxLoaderActions.registerLoader({
@@ -62,10 +60,7 @@ const registerAction = reduxLoaderActions.registerLoader({
 const Loader = (props) => {
     React.useEffect(() => {
         props.loaderAction()
-    }, [
-        // props.pathname
-    ])
-    // console.log(constants)
+    }, [])
 
     return (
         <div className="preloader">
@@ -85,20 +80,7 @@ const Loader = (props) => {
     )
 }
 
-
-
-
-Loader.propTypes = {
-    confirmAction: PropTypes.any,
-}
-
 const mapStateToProps = state => ({
-    // user: state.user,
-    // users: state.users,
-    // posts: state.posts,
-    // post: state.post,
-    // fileUpload: state.fileUpload,
-    // pathname: state.router.location.pathname,
     loader: state.reduxLoader.loaders.loader,
 });
 
