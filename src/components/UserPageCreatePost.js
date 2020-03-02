@@ -25,10 +25,6 @@ class UserPageCreatePost extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.props.usersActions.getUsers()
-    }
-
     componentDidUpdate(prevProps) {
         if (!this.props.posts.error &&
             this.props.posts.collection !== prevProps.posts.collection &&
