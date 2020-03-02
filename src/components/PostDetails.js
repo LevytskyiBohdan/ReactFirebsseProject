@@ -18,7 +18,7 @@ const PostDetails = ({ post, user, postActions, usersActions, users, match: { pa
         postActions.getPost("posts", postId)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postId])
-
+    console.log(post)
     return (post &&
         <>
 
@@ -38,8 +38,8 @@ const PostDetails = ({ post, user, postActions, usersActions, users, match: { pa
 
                         <p>{post.article}</p>
 
-                        {users &&
-                            <h6>Author: {setAuthor(user.currentUser.uid, users)}</h6>
+                        {post &&
+                            <h6>Author: {post.author}</h6>
                         }
 
                         <div className="row mt-5">

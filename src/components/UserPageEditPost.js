@@ -1,7 +1,7 @@
 /* eslint-disable default-case */
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
 import * as userActions from '../actions/user';

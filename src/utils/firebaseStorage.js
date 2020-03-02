@@ -65,7 +65,7 @@ export function firebaseGetUploadedFiles(path) {
         const uriOfFiles = [];
 
         return firebase.storage().ref().child(path).listAll().then(function (res) {
-
+            if (!res.items.length) return reject()
             return res.items.forEach(function (itemRef) {
                 
                 return itemRef.getDownloadURL().then(uri => {
