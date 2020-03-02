@@ -28,8 +28,7 @@ class UserPageEditPost extends React.Component {
     }
 
     componentDidMount() {
-        const id = this.props.pathname.split("/")[3];
-        this.props.postActions.getPost("posts", id)
+        this.props.postActions.getPost("posts", this.props.postId)
     }
 
     componentDidUpdate(prevProps) {
@@ -73,7 +72,7 @@ class UserPageEditPost extends React.Component {
             publish: this.state.publish,
         }
 
-        this.props.postsActions.editPost('posts', this.props.pathname.split("/")[3], date);
+        this.props.postsActions.editPost('posts', this.props.postId, date);
 
     }
 
@@ -162,9 +161,9 @@ class UserPageEditPost extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
+    postId: ownProps.match.params.id,
     state,
-    pathname: state.router.location.pathname,
     post: state.post,
     user: state.user.currentUser,
     posts: state.posts,

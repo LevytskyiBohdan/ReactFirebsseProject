@@ -12,12 +12,12 @@ const setAuthor = (uid, users) => {
     })
 }
 
-const PostDetails = ({ post, user, pathname, postActions, usersActions, users, match: { params: { id } } }) => {
+const PostDetails = ({ post, user, postActions, usersActions, users, match: { params: { id: postId } } }) => {
     React.useEffect(() => {
         usersActions.getUsers()
-        postActions.getPost("posts", id)
+        postActions.getPost("posts", postId)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id])
+    }, [postId])
 
     return (post &&
         <>
@@ -29,7 +29,7 @@ const PostDetails = ({ post, user, pathname, postActions, usersActions, users, m
                         <div className="imgTop" style={{ background: `url(${post.img[0]})` }}></div>
 
                         {(user.currentUser && post.owner === user.currentUser.uid) ?
-                            <Link to={`/user/editPost/${pathname.split("/")[2]}`}>
+                            <Link to={`/user/editPost/${postId}`}>
                                 <h1 className="editIcon">{post.title}</h1>
                             </Link>
                             :
@@ -62,9 +62,7 @@ const PostDetails = ({ post, user, pathname, postActions, usersActions, users, m
 }
 
 const mapStateToProps = state => ({
-    pathname: state.router.location.pathname,
     post: state.post.postById,
-    location: state.router.location.pathname,
     user: state.user,
     users: state.users.users,
 });
@@ -72,7 +70,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     postActions: bindActionCreators(postActions, dispatch),
     usersActions: bindActionCreators(usersActions, dispatch),
-    // postsActions: bindActionCreators(postsActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostDetails));
