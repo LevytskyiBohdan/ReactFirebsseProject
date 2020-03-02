@@ -12,11 +12,11 @@ export default (
         <Route exact path="/" render={Home} />
         <Route exact path="/about" render={About} />
         <Route exact path="/post/:id" render={PostDetails} />
+        <ProtectedRoutes exact path="/user" render={UserPageView} />
         <ProtectedRoutes path="/user/editPost/:id" render={UserPageEditPost} />>
-        <ProtectedRoutes path="/user" render={UserPageView} />
-        <ProtectedRoutes path="/user/createPost" render={UserPageView} />
-        <ProtectedRoutes path="/user/myPosts" render={UserPageView} />
-        <ProtectedRoutes path="user/post/:id" render={PostDetails} />
-        <Route  render={() => (<div><h1>404</h1></div>)} />
+        <ProtectedRoutes exact path="/user/createPost" render={UserPageView} />
+        <ProtectedRoutes exact path="/user/myPosts" render={UserPageView} />
+        <ProtectedRoutes path="/user/post/:id" render={PostDetails} />
+        <Route render={() => (<div><h1>404</h1></div>)} />
     </Switch>
 )

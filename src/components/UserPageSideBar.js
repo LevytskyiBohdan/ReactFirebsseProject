@@ -1,32 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
-import * as userActions from '../actions/user';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-class UserPageSideBar extends React.Component {
-    render() {
-        const location = this.props.location;
-
-        return (
-                <div className="col-3">
-                    <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <Link className={`nav-link ${location==='/user' ? 'active': null}`} to="/user" >My Info</Link>
-                        <Link className={`nav-link ${location==='/user/createPost' ? 'active': null}`} to="/user/createPost">Create Post</Link>
-                        <Link className={`nav-link ${location==='/user/myPosts' ? 'active': null}`} to="/user/myPosts" >My Posts</Link>
-                    </div>
-                </div>
-            )
-    }
+function UserPageSideBar() {
+    return (
+        <div className="col-3">
+            <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <NavLink exact activeClassName='active' className='nav-link' to="/user" >My Info</NavLink>
+                <NavLink activeClassName='active' className='nav-link' to="/user/createPost">Create Post</NavLink>
+                <NavLink activeClassName='active' className='nav-link' to="/user/myPosts" >My Posts</NavLink>
+            </div>
+        </div>
+    )
 }
 
-const mapStateToProps = state => ({
-    location: state.router.location.pathname
-});
-
-const mapDispatchToProps = dispatch => ({
-    userActions: bindActionCreators(userActions, dispatch),
-});
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserPageSideBar));
+export default withRouter(UserPageSideBar);

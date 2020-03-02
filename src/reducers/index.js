@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { connectRouter } from 'connected-react-router';
 import user from './user';
 import users from './users';
 import modal from './modal';
@@ -9,8 +8,7 @@ import fileUpload from './fileUpload';
 
 import { reduxLoaderReducer } from 'redux-state-loader';
 
-const createRootReducer = (history) => combineReducers({
-  router: connectRouter(history),
+const createRootReducer = combineReducers({
   user,
   users,
   modal,
