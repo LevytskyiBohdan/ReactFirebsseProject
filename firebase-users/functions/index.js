@@ -55,6 +55,7 @@ const changePostsAutor = (req, res) => {
     db.collection('posts').where('owner', '==', req.body.owner)
       .get()
       .then((querySnapshot) => {
+
         if (querySnapshot.docs.length !== 0) {
 
           querySnapshot.forEach((doc) => {
@@ -65,14 +66,15 @@ const changePostsAutor = (req, res) => {
 
             return resolve(data)
           });
-        }
-        return resolve([]);
+        } else return resolve([]);
       })
       .catch((error) => {
         return reject(error)
       });
 
   }).then(data => {
+    if(data.length === 0) throw new Error("No posts yet")
+
     data.forEach((post, idx) => {
       db.collection('posts').doc(post).set({
         author: req.body.newName,
@@ -81,18 +83,30 @@ const changePostsAutor = (req, res) => {
           if ((data.length - 1) === idx) res.send("all ok, >>>>")
         })
         .catch((error) => {
-          res.send({ error, dsdf: "sdasd" })
+          res.send(error)
         });
 
     })
   })
-    .catch(err => res.send(err));
+    .catch(err => { 
+      console.log(err)
+      res.send(String(err))
+    });
+}
+
+
+const test = (req, res) => {
+  res.set('Access-Control-Allow-Headers', 'X-Custom-Header, Upgrade-Insecure-Requests, Accept, Content-Type');
+  res.set('Access-Control-Allow-Origin', '*');
+
+  res.send(req.body)
 }
 
 
 module.exports = {
   api: functions.https.onRequest(getAllUsers),
   changePostsAutor: functions.https.onRequest(changePostsAutor),
+  test: functions.https.onRequest(test),
 };
 
 // Create and Deploy Your First Cloud Functions
