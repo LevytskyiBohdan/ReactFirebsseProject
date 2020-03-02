@@ -1,40 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
-import * as postsActions from '../actions/posts';
 import * as modalActions from '../actions/modal';
 import * as userActions from '../actions/user';
 import ErrorMessage from './ErrorMessage';
 
-class ConfirmDeleteUser extends React.Component {
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            email: '',
-            password: '',
-        }
-    }
-    
-    componentDidUpdate(nextProps) {
-        if (nextProps.user.currentUser !== this.props.user.currentUser) {
-            this.props.modalActions.hideModal();
-            this.props.push('/');
-        }
-    }
+const ConfirmDeleteUser = (props) => {
+    const [email, setEmail] = React.useState(null);
+    const [password, setPassword] = React.useState(null);
 
-    deleteUser() {
-        this.props.userActions.deleteUser( this.state.email, this.state.password);
-    }
+    const mounted = React.useRef();
 
-    render() {
-        return (
-            <form>
+    React.useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true;
+          } else {
+            props.push('/');
+            props.modalActions.hideModal();
+          }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.user.currentUser])
+
+    return(
+        <form>
                 <div className="form-group">
-                <ErrorMessage error={this.props.user.error} />
+                <ErrorMessage error={props.user.error} />
                         <div className="form-group">
                             <label htmlFor="email">Login</label>
                             <input
@@ -42,9 +34,7 @@ class ConfirmDeleteUser extends React.Component {
                                 className="form-control"
                                 id="email"
                                 onChange={evt => {
-                                    this.setState({
-                                        email: evt.target.value,
-                                    })
+                                    setEmail(evt.target.value)
                                 }}
                                 />
                         </div>
@@ -56,9 +46,7 @@ class ConfirmDeleteUser extends React.Component {
                                 className="form-control"
                                 id="password"
                                 onChange={evt => {
-                                    this.setState({
-                                        password: evt.target.value,
-                                    })
+                                    setPassword(evt.target.value)
                                 }}
                                 />
                         </div>
@@ -66,16 +54,11 @@ class ConfirmDeleteUser extends React.Component {
                         <button
                             type="button"
                             className="btn btn-block btn-danger"
-                            onClick={()=> { this.deleteUser() }}
+                            onClick={()=> { props.userActions.deleteUser(email, password) }}
                             >Delete</button>
                 </div>
             </form>
-        )
-    }
-}
-
-ConfirmDeleteUser.propTypes = {
-    action: PropTypes.any,
+    );
 }
 
 const mapStateToProps = state => ({
@@ -85,7 +68,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     push: path => dispatch(push(path)),
-    postsActions: bindActionCreators(postsActions, dispatch),
     modalActions: bindActionCreators(modalActions, dispatch),
     userActions: bindActionCreators(userActions, dispatch),
 });

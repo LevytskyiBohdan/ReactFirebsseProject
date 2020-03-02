@@ -1,11 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-class ErrorMessage extends React.Component {
-    render() {
-        const error = this.props.error;
-        return (error &&
-        <>
+const ErrorMessage = ({ error }) => {
+    return (
+        error &&
             <div className="alert alert-danger" role="alert">
                 {(error.errorCode || error.errorMessage) ? 
                 (<>
@@ -17,13 +14,7 @@ class ErrorMessage extends React.Component {
                 </p>)
                 }
             </div>
-        </>) || null;
-    }
+    ) || null;
 }
-
-ErrorMessage.propTypes = {
-    error: PropTypes.any,
-}
-
 
 export default ErrorMessage;
