@@ -7,54 +7,47 @@ import { bindActionCreators } from 'redux';
 import * as modalActions from '../actions/modal';
 import * as fileUploadActions from '../actions/fileUpload';
 
-class FileUploadForm extends React.Component {
-    constructor(props) {
-        super(props);
+const FileUploadForm = ({ chosenFiles, fileUploadActions, userUid, filesURI, newFiles, modalActions }) => {
+    const [chosenFilesState, setChosenFiles] = React.useState(chosenFiles ? [...chosenFiles] : [])
 
-        this.state = {
-            chosenFiles: this.props.chosenFiles ? [...this.props.chosenFiles] : [],
+    React.useEffect(() => {
+        fileUploadActions.getUploadedFiles(userUid)
+    }, [])
+
+    const mounted = React.useRef();
+
+    React.useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true;
+        } else {
+            if (newFiles)
+                fileUploadActions.getUploadedFiles(userUid)
         }
-    }
-    
-    componentDidMount() {
-        this.props.fileUploadActions.getUploadedFiles(this.props.userUid)
-    }
 
-    componentDidUpdate(nextProps) {
-        if (this.props.newFiles !== nextProps.newFiles) {
-            this.props.fileUploadActions.getUploadedFiles(this.props.userUid)
+    }, [fileUploadActions, newFiles, userUid])
+
+    React.useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true;
+        } else {
+            if (chosenFiles && chosenFiles.length)
+                modalActions.hideModal();
         }
-        
-        if (this.props.chosenFiles !== nextProps.chosenFiles) {
-            this.props.modalActions.hideModal();
-        }
-    }
+    }, [chosenFiles])
 
-    deleteChosenImg(idx) {
-        const images = this.state.chosenFiles;
-
-        images.splice(idx, 1);
-
-        this.setState({
-            chosenFiles: images,
-        })
-
-    }
-
-    render() {
-        return (<>
-
+    return (
+        <>
             <form>
                 <div className="form-group">
-                    {this.props.filesURI && this.props.filesURI.map((img, idx) => (
+                    {filesURI && filesURI.map((img, idx) => (
                         <img
                             key={idx}
                             src={img}
                             style={{ height: "100px", width: "100px" }}
                             className="img-thumbnail mr-3 mb-3"
-                            onClick={() => { this.setState({
-                                chosenFiles: [...this.state.chosenFiles, img]
-                            }) }}
+                            onClick={() => {
+                                setChosenFiles([...chosenFilesState, img])
+                            }}
                         ></img>
 
                     ))}
@@ -66,20 +59,27 @@ class FileUploadForm extends React.Component {
                         type="file"
                         className="custom-file-input"
                         id="fileUpload" required
-                        onChange={evt => { this.props.fileUploadActions.fileUpload(evt.target.files, `usersUploadedFiles/${this.props.userUid}`); }}
+                        onChange={evt => { fileUploadActions.fileUpload(evt.target.files, `usersUploadedFiles/${userUid}`); }}
                     />
                     <label className="custom-file-label" htmlFor="fileUpload">Choose file...</label>
 
                 </div>
 
                 <div className="form-group mt-3">
-                    {!!this.state.chosenFiles.length && this.state.chosenFiles.map((img, idx) => (
+                    {!!chosenFilesState.length && chosenFilesState.map((img, idx) => (
                         <img
                             key={idx}
                             src={img}
                             style={{ height: "40px", width: "40px" }}
                             className="img-thumbnail mr-3"
-                            onClick={() => { this.deleteChosenImg(idx) }}
+                            onClick={() => {
+                                const images = chosenFilesState;
+
+                                images.splice(idx, 1);
+
+                                setChosenFiles([...images])
+
+                            }}
                         ></img>
 
                     ))}
@@ -89,13 +89,12 @@ class FileUploadForm extends React.Component {
                     <button
                         type="button"
                         className="btn btn-block btn-primary"
-                        onClick={() => {this.props.fileUploadActions.setChosenFiles(this.state.chosenFiles)}}
+                        onClick={() => { fileUploadActions.setChosenFiles(chosenFilesState) }}
                     >Choose</button>
                 </div>
             </form>
         </>
-        )
-    }
+    );
 }
 
 const mapStateToProps = state => ({
