@@ -57,18 +57,18 @@ const registerAction = reduxLoaderActions.registerLoader({
     ],
 });
 
-const Loader = (props) => {
+const Loader = ({children, loaderAction, loader}) => {
     React.useEffect(() => {
-        props.loaderAction()
+        loaderAction()
     }, [])
 
     return (
         <div className="preloader">
-            <div className={`${props.loader ? 'blur' : ''}`}>
-                {props.children}
+            <div className={`${loader ? 'blur' : ''}`}>
+                {children}
             </div>
 
-            {props.loader && (
+            {loader && (
                 <div className="spiner d-flex flex-row align-items-center">
                     <div className="spinner-border text-secondary" role="status">
                         <span className="sr-only">Loading...</span>
