@@ -5,24 +5,16 @@ import * as userActions from '../actions/user';
 import * as modalActions from '../actions/modal';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
-import Modal from './Modal';
 import LoginForm from './LoginForm';
 import SigninForm from './SigninForm';
 
-class Header extends React.Component {
-    componentDidMount() {
-        this.props.userActions.getCurrentUser();
-    }
+const Header = ({ user, userActions, modalActions}) => {
+    React.useEffect(()=> {
+        userActions.getCurrentUser();
+    }, [])
 
-    logOut() {
-        this.props.push('/');
-        this.props.userActions.userLogout()
-    }
-
-    render() {
-        const user = this.props.user;
-        return (
-            <div className="container-fluid">
+    return(
+        <div className="container-fluid">
                 <div className="row">
                     <div className="col-12">
                         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -49,7 +41,7 @@ class Header extends React.Component {
                                                         type="button"
                                                         className="btn btn-secondary"
                                                         onClick={() => {
-                                                            this.props.modalActions.showModal(<LoginForm />)
+                                                            modalActions.showModal(<LoginForm />)
                                                         }}
                                                     >Login</button>
                                                 </li>
@@ -58,7 +50,7 @@ class Header extends React.Component {
                                                         type="button"
                                                         className="btn btn-secondary"
                                                         onClick={() => {
-                                                            this.props.modalActions.showModal(<SigninForm/>)
+                                                            modalActions.showModal(<SigninForm/>)
                                                         }}
                                                     >Signin</button>
                                                 </li>
@@ -69,7 +61,7 @@ class Header extends React.Component {
                                                 <button
                                                     type="button"
                                                     className="btn btn-secondary"
-                                                    onClick={() => { this.logOut() }}
+                                                    onClick={() => { userActions.userLogout() }}
                                                 >Logout</button>
                                             </li>
                                         }
@@ -80,7 +72,7 @@ class Header extends React.Component {
                                     (<>
                                         <form className="form-inline my-2 my-lg-0">
                                             <Link className="nav-link" to="/user">
-                                                <img src={this.props.user.currentUser.photoURL} alt="..." className="img-thumbnail" style={{ width: "40px", height: "40px" }} />
+                                                <img src={user.currentUser.photoURL} alt="..." className="img-thumbnail" style={{ width: "40px", height: "40px" }} />
                                             </Link>
                                         </form>
                                     </>)
@@ -89,8 +81,8 @@ class Header extends React.Component {
                         </nav>
                     </div>
                 </div>
-            </div >)
-    }
+            </div >
+    );
 }
 
 const mapStateToProps = state => ({
