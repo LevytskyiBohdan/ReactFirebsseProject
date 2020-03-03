@@ -1,113 +1,98 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as modalActions from '../actions/modal';
 import * as userActions from '../actions/user';
 import ErrorMessage from './ErrorMessage';
 
-class LoginForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: "",
-            password: "",
-            isSubmitting: false,
-            invalidsinput: []
-        }
+const LoginForm = ({ user, userActions, modalActions }) => {
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [isInvalidInputs, setIsInvalidInputs] = React.useState([]);
 
-        this.inputsToValidate = ['email', 'password'];
+    const inputsToValidate = { email, password }
+
+    
+    React.useEffect(() => {
+        if (user.currentUser) modalActions.hideModal();        
+    }, [modalActions, user.currentUser])
+    
+    React.useEffect(() => {
+        if (user.error) setIsSubmitting(false)
+    }, [user.error])
+    
+    function onSubmit() {
+        if (isSubmitting || !validate()) return null;
+        setIsSubmitting(true);
+        
+        userActions.userLogin(email, password);
     }
 
-    validate(field) {
+    function isValidInput(name) {
+        return isInvalidInputs.indexOf(name) !== -1;
+    }
+    
+    function validate() {
         let isValid = true;
         const invalidsinput = [];
-
-        this.inputsToValidate.forEach(input => {
+        
+        for(let key in inputsToValidate){
             let isInputValid = true;
+            const input = inputsToValidate[key];
 
-            isInputValid = this.state[input] && this.state[input] !== null && this.state[input].trim() !== '';
+            isInputValid = input && input !== null && input.trim() !== '';
 
             if (!isInputValid) {
-                invalidsinput.push(input);
+                invalidsinput.push(String(key));
                 isValid = false;
             }
-        });
+        }
 
-        this.setState({
-            invalidsinput,
-        });
+        setIsInvalidInputs(invalidsinput);
 
         return isValid;
     }
 
-    isValidInput(name) {
-        return this.state.invalidsinput.indexOf(name) !== -1;
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.user.currentUser !== prevProps.user.currentUser) {
-            this.props.modalActions.hideModal();
-        }
-
-        if (this.props.user.error && this.props.user.error !== prevProps.user.error) {
-            this.setState({
-                isSubmitting: false,
-            })
-        }
-    }
-
-    onSubmit() {
-        if (this.state.isSubmitting || !this.validate()) return null;
-
-        this.setState({
-            isSubmitting: true,
-        })
-
-        const email = this.state.email;
-        const password = this.state.password;
-        
-        this.props.userActions.userLogin(email, password);
-    }
-
-    render() {
-        return (<>
-            <form>
-                <ErrorMessage 
-                    error={this.props.user.error}
+    return (
+        <form>
+            <ErrorMessage
+                error={user.error}
+            />
+            <div className="form-group">
+                <label htmlFor="email">Email address</label>
+                <input
+                    type="email"
+                    className={`form-control ${isValidInput('email') ? "is-invalid" : ""}`}
+                    id="email"
+                    onChange={evt => {
+                        setEmail(evt.target.value);
+                    }}
                 />
-                <div className="form-group">
-                    <label htmlFor="email">Email address</label>
-                    <input
-                        type="email"
-                        className={`form-control ${this.isValidInput('email') ? "is-invalid" : ""}`}
-                        id="email"
-                        onChange={evt => {
-                            this.setState({ email: evt.target.value });
-                        }}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        className={`form-control ${this.isValidInput('password') ? "is-invalid" : ""}`}
-                        id="password"
-                        onChange={evt => {
-                            this.setState({ password: evt.target.value })
-                        }}
-                    />
-                </div>
-                <button
-                    type="button"
-                    className="btn btn-block btn-primary"
-                    onClick={() => { this.onSubmit() }}
-                    disabled={this.state.isSubmitting}
-                >Login</button>
-            </form>
-        </>)
-    }
+            </div>
+            <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                    type="password"
+                    className={`form-control ${isValidInput('password') ? "is-invalid" : ""}`}
+                    id="password"
+                    onChange={evt => {
+                        setPassword(evt.target.value);
+                    }}
+                />
+            </div>
+            <button
+                type="button"
+                className="btn btn-block btn-primary"
+                onClick={() => onSubmit()}
+                disabled={isSubmitting}
+            >Login</button>
+        </form>
+    );
+
 }
 
 LoginForm.propTypes = {
