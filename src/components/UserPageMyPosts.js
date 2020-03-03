@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
 import * as modalActions from '../actions/modal';
-import Modal from './Modal';
 import ConfirmDelete from './ConfirmDelete';
 import "../css/UserPageMyPosts.css";
 

@@ -1,211 +1,34 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as modalActions from '../actions/modal';
-import * as userActions from '../actions/user';
 import * as fileUploadActions from '../actions/fileUpload';
 import ErrorMessage from './ErrorMessage';
-import FileUploader from './FileUploader';
+import SigninFormCreateUser from './SigninFormCreateUser';
+import SigninFormAddUserData from './SigninFormAddUserData';
 
-class SigninForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: "",
-            password: "",
-            rePassword: "",
-            name: "",
-            photoURL: [''],
-            isSubmitting: false,
-            invalidsinput: [],
+const SigninForm = ({user: { error, currentUser }, modalActions, fileUploadActions}) => {
+    React.useEffect(() => {
+        if (currentUser && currentUser.displayName) {
+            modalActions.hideModal();
+            fileUploadActions.clearFileUploader();
         }
 
-        this.inputsToValidate = ['email', 'password', 'rePassword',];
-    }
+    }, [currentUser, fileUploadActions, modalActions])
 
-    validate() {
-        let isValid = true;
-        const invalidsinput = [];
+    return (<>
+        <form>
+            <ErrorMessage
+                error={error}
+            />
 
-        this.inputsToValidate.forEach(input => {
-            let isInputValid = true;
+            <SigninFormCreateUser />
 
-            if (input === 'rePassword') {
-                isInputValid = this.state[input] && this.state[input] !== null && this.state[input].trim() !== '' && this.state.password === this.state.rePassword;
-            }
-            else {
-                isInputValid = this.state[input] && this.state[input] !== null && this.state[input].trim() !== '';
-            }
+            <SigninFormAddUserData />
 
-            if (!isInputValid) {
-                invalidsinput.push(input);
-                isValid = false;
-            }
-        });
-
-        this.setState({
-            invalidsinput,
-        });
-
-        return isValid;
-    }
-
-    isValidInput(name) {
-        return this.state.invalidsinput.indexOf(name) !== -1;
-    }
-
-    componentDidUpdate(nextProps) {
-        if (this.props.user.currentUser !== nextProps.user.currentUser) {
-            this.setState({
-                isSubmitting: false,
-            })
-        }
-
-        if (this.props.user.currentUser &&
-            this.props.user.currentUser.displayName &&
-            this.props.user.currentUser.displayName !== nextProps.user.currentUser.displayName) {
-            this.props.modalActions.hideModal();
-            this.props.fileUploadActions.clearFileUploader();
-        }
-
-        if (this.props.user.error && this.props.user.error !== nextProps.user.error) {
-            this.setState({
-                isSubmitting: false,
-            })
-        }
-    }
-
-    onSubmit() {
-        if (this.state.isSubmitting || !this.validate()) return null;
-
-        this.setState({
-            isSubmitting: true,
-        })
-
-        const email = this.state.email;
-        const password = this.state.password;
-
-        this.props.userActions.createUser(email, password)
-    }
-
-    onDone() {
-        if (this.state.isSubmitting) return null;
-
-        this.setState({
-            isSubmitting: true,
-        })
-
-        const data = {
-            displayName: this.state.name,
-            photoURL: this.props.chosenFiles[0],
-        }
-
-        this.props.userActions.editUser(data);
-    }
-
-    renderSingIn() {
-        if (!this.props.user.currentUser) {
-            return (<>
-                <div className="form-group">
-                    <label htmlFor="email">Email address</label>
-                    <input
-                        type="email"
-                        className={`form-control ${this.isValidInput('email') ? "is-invalid" : ""}`}
-                        id="email"
-                        onChange={evt => {
-                            this.setState({ email: evt.target.value })
-                        }}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        className={`form-control ${this.isValidInput('password') ? "is-invalid" : ""}`}
-                        id="password"
-                        onChange={evt => {
-                            this.setState({ password: evt.target.value })
-                        }}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="re-password">Re-Password</label>
-                    <input
-                        type="password"
-                        className={`form-control ${this.isValidInput('rePassword') ? "is-invalid" : ""}`}
-                        id="re-password"
-                        onChange={evt => {
-                            this.setState({ rePassword: evt.target.value })
-                        }}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <button
-                        type="button"
-                        className="btn btn-block btn-primary"
-                        onClick={() => { this.onSubmit() }}
-                        disabled={this.state.isSubmitting}
-                    >Singin</button>
-                </div>
-            </>
-            );
-        }
-
-        return null;
-    }
-
-    renserAddDataToUser() {
-        if (this.props.user.currentUser) {
-            return (
-                <>
-                    <div className="form-group">
-                        <label htmlFor="name">Name</label>
-                        <input
-                            type="text"
-                            className={`form-control ${this.isValidInput('name') ? "is-invalid" : ""}`}
-                            id="name"
-                            onChange={evt => { this.setState({ name: evt.target.value }) }}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <div className="custom-file mb-4">
-                            <FileUploader />
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <button
-                            type="button"
-                            className="btn btn-block btn-primary"
-                            onClick={() => { this.onDone() }}
-                            disabled={this.state.isSubmitting}
-                        >Finish</button>
-                    </div>
-                </>
-            )
-        }
-    }
-
-    render() {
-        return (<>
-            <form>
-                <ErrorMessage
-                    error={this.props.user.error}
-                />
-
-                {this.renderSingIn()}
-
-                {this.renserAddDataToUser()}
-
-            </form>
-        </>)
-    }
-}
-
-SigninForm.propTypes = {
-    confirmAction: PropTypes.any,
+        </form>
+    </>)
 }
 
 const mapStateToProps = state => ({
@@ -216,7 +39,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     modalActions: bindActionCreators(modalActions, dispatch),
     fileUploadActions: bindActionCreators(fileUploadActions, dispatch),
-    userActions: bindActionCreators(userActions, dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SigninForm));

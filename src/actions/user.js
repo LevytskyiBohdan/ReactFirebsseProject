@@ -106,7 +106,6 @@ export function editUser(userUid, data) {
         firebaseEditUser(data)
             .then(() => {
                 if (userUid) {
-                    console.log("/////")
                     return fetch('https://us-central1-react-firebase-project-f71c4.cloudfunctions.net/changePostsAutor', {
                         method: 'POST',
                         mode: 'cors',
