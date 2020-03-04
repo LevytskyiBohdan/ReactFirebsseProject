@@ -7,74 +7,69 @@ import * as userActions from '../actions/user';
 import * as postsActions from '../actions/posts';
 import * as modalActions from '../actions/modal';
 import ConfirmDelete from './ConfirmDelete';
+import { DELETE_POST_SUCCESS } from '../constants';
 import "../css/UserPageMyPosts.css";
 
-class UserPageMyPosts extends React.Component {
-    constructor(props) {
-        super(props);
+const UserPageMyPosts = ({currentStoreStatus, posts, user, userPosts, isLoaded, modalActions, postsActions, userActions}) => {
+    const query = {
+        name: 'owner',
+        symbol: '==',
+        equal: user.uid,
+    }
 
-        this.query = {
-            name: 'owner',
-            symbol: '==',
-            equal: this.props.user.uid,
+    React.useEffect(() => {
+        userActions.getUserPosts('posts', query);
+    }, [])
+
+    React.useEffect(() => {
+        if (currentStoreStatus === DELETE_POST_SUCCESS) {
+            modalActions.hideModal();
+            userActions.getUserPosts('posts', query);
         }
-    }
-    
-    componentDidMount() { 
-        this.props.userActions.getUserPosts('posts', this.query);
-    }
+    }, [posts])
 
-    componentDidUpdate(nextProps) {
-        if (this.props.posts !== nextProps.posts) {
-            this.props.userActions.getUserPosts('posts', this.query);
-            this.props.modalActions.hideModal();
-        }
-    }
 
-    onDelete(article) {
-        this.props.modalActions.showModal(
-            <ConfirmDelete
-                action={() => this.props.postsActions.deletePost("posts", article.id)}
-            />);
-    }
 
-    render() {
-        return (
-            <div className="row userPosts">
-                {this.props.userPosts && this.props.isLoaded &&
-                    this.props.userPosts.map((article, idx) =>
-                        (
-                            <div key={idx} className="col-12 col-12 col-sm-6 col-md-4 mb-3 posts">
-                                <div className="card pt-3">
-                                    <img src={article.img} className="card-img-top" alt="..." />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{article.title}</h5>
-                                        <p className="card-text">{article.article}</p>
-                                        <Link
-                                            className="btn btn-block btn-primary"
-                                            to={`/post/${article.id}`}
-                                        >read more...</Link>
+    return (
+        <div className="row userPosts">
+            {userPosts && isLoaded &&
+                userPosts.map((article, idx) =>
+                    (
+                        <div key={idx} className="col-12 col-12 col-sm-6 col-md-4 mb-3 posts">
+                            <div className="card pt-3">
+                                <img src={article.img[0]} className="card-img-top" alt="..." />
+                                <div className="card-body">
+                                    <h5 className="card-title">{article.title}</h5>
+                                    <p className="card-text">{article.article}</p>
+                                    <Link
+                                        className="btn btn-block btn-primary"
+                                        to={`/post/${article.id}`}
+                                    >read more...</Link>
 
-                                        <Link
-                                            className="btn btn-block btn-warning"
-                                            to={`/user/editPost/${article.id}`}
-                                        >Edit</Link>
-                                        
-                                        <button
-                                            type="button"
-                                            className="btn btn-block btn-danger"
-                                            onClick={() => { this.onDelete(article) }}
-                                        >Delete</button>
+                                    <Link
+                                        className="btn btn-block btn-warning"
+                                        to={`/user/editPost/${article.id}`}
+                                    >Edit</Link>
 
-                                    </div>
+                                    <button
+                                        type="button"
+                                        className="btn btn-block btn-danger"
+                                        onClick={() => { 
+                                            modalActions.showModal(
+                                                <ConfirmDelete
+                                                    action={() => postsActions.deletePost("posts", article.id)}
+                                                />);
+                                        }}
+                                    >Delete</button>
+
                                 </div>
                             </div>
-                        )
+                        </div>
                     )
-                }
-            </div>
-        )
-    }
+                )
+            }
+        </div>
+    )
 }
 
 const mapStateToProps = state => ({
@@ -82,6 +77,7 @@ const mapStateToProps = state => ({
     isLoaded: state.user.isLoaded,
     userPosts: state.user.userPosts,
     posts: state.posts,
+    currentStoreStatus: state.currentStoreStatus,
 });
 
 const mapDispatchToProps = dispatch => ({

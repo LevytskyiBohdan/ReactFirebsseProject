@@ -5,10 +5,11 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as postsActions from '../actions/posts';
 import * as fileUploadActions from '../actions/fileUpload';
+import { CREATE_POST_SUCCESS, CREATE_POST_FAILURE } from '../constants';
 import FileUploader from './FileUploader';
 import InfoMessage from './InfoMessage';
 
-const UserPageCreatePost = ({ user, postsActions, chosenFiles, posts }) => {
+const UserPageCreatePost = ({currentStoreStatus, user, postsActions, chosenFiles, posts, fileUploadActions }) => {
     const [title, setTitle] = React.useState('');
     const [article, setArticle] = React.useState('');
     const [publish, setPublish] = React.useState(false);
@@ -16,7 +17,7 @@ const UserPageCreatePost = ({ user, postsActions, chosenFiles, posts }) => {
     const [createSaccess, setCreateSaccess] = React.useState(false);
 
     React.useEffect(() => {
-        if (!posts.error && posts.collection && posts.isLoaded) {
+        if (currentStoreStatus === CREATE_POST_SUCCESS) {
 
             fileUploadActions.clearFileUploader();
             
@@ -25,8 +26,11 @@ const UserPageCreatePost = ({ user, postsActions, chosenFiles, posts }) => {
             setPublish(false);
             setIsCreating(false);
             setCreateSaccess(true);
-
         }
+
+        if (currentStoreStatus === CREATE_POST_FAILURE)
+            setIsCreating(false);
+
     }, [isCreating, posts.collection, posts.isLoaded])
 
     function onSubmit() {
@@ -115,6 +119,7 @@ const mapStateToProps = state => ({
     user: state.user.currentUser,
     posts: state.posts,
     chosenFiles: state.fileUpload.chosenFiles,
+    currentStoreStatus: state.currentStoreStatus,
 });
 
 const mapDispatchToProps = dispatch => ({

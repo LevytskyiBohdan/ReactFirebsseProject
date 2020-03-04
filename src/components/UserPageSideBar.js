@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
-function UserPageSideBar() {
+const UserPageSideBar = () => {
     return (
         <div className="col-3">
             <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">

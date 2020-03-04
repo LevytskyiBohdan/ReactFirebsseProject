@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { push } from 'connected-react-router';
 import * as postsActions from '../actions/posts';
 import * as postActions from '../actions/post';
 import * as fileUploadActions from '../actions/fileUpload';
@@ -24,6 +23,7 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
 
     React.useEffect(() => {
         if (currentStoreStatus === EDIT_POST_SUCCESS) {
+            window.location = '/user/myPosts'
             fileUploadActions.clearFileUploader();
             setIsCreating(false);
             setIsMessage(true);
