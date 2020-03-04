@@ -9,31 +9,23 @@ import * as fileUploadActions from '../actions/fileUpload';
 
 const FileUploadForm = ({ chosenFiles, fileUploadActions, userUid, filesURI, newFiles, modalActions }) => {
     const [chosenFilesState, setChosenFiles] = React.useState(chosenFiles ? [...chosenFiles] : [])
+    const [isDone, setIsDone] = React.useState();
 
     React.useEffect(() => {
         fileUploadActions.getUploadedFiles(userUid)
     }, [])
 
-    const mounted = React.useRef();
-
     React.useEffect(() => {
-        if (!mounted.current) {
-            mounted.current = true;
-        } else {
-            if (newFiles)
-                fileUploadActions.getUploadedFiles(userUid)
-        }
+
+        if (newFiles)
+            fileUploadActions.getUploadedFiles(userUid)
 
     }, [fileUploadActions, newFiles, userUid])
 
     React.useEffect(() => {
-        if (!mounted.current) {
-            mounted.current = true;
-        } else {
-            if (chosenFiles && chosenFiles.length)
-                modalActions.hideModal();
-        }
-    }, [chosenFiles])
+        if (isDone)
+        modalActions.hideModal();
+    }, [isDone, modalActions])
 
     return (
         <>
@@ -89,7 +81,10 @@ const FileUploadForm = ({ chosenFiles, fileUploadActions, userUid, filesURI, new
                     <button
                         type="button"
                         className="btn btn-block btn-primary"
-                        onClick={() => { fileUploadActions.setChosenFiles(chosenFilesState) }}
+                        onClick={() => {
+                            setIsDone(true);
+                            fileUploadActions.setChosenFiles(chosenFilesState)
+                        }}
                     >Choose</button>
                 </div>
             </form>
