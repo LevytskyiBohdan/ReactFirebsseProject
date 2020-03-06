@@ -7,23 +7,52 @@ import PropTypes from 'prop-types';
 import * as postsActions from '../actions/posts';
 import * as postActions from '../actions/post';
 import InfoMessage from './InfoMessage';
+import { RATING_COUNT_SUCCESS, GET_RATING_SUCCESS, RATING_COUNT } from '../constants'
 import '../css/LikePost.css';
 
-const LikePost = ({ postId, posts, currentUser, postsActions }) => {
+const LikePost = ({ postId, rating, currentUser, postsActions, currentStoreStatus }) => {
     const [isShowMessage, setIsShowMessage] = React.useState();
     const [message, setMessage] = React.useState();
+    const [isLoading, setIsLoading] = React.useState(true);
 
-    const post = posts.collection.find(post => post.id === postId)
+    React.useEffect(() => {
+        postsActions.getRating();
+    }, [])
 
-    function onLike() {
-        changeLikeStatus('like')
+    React.useEffect(() => {
+        if (currentStoreStatus === RATING_COUNT_SUCCESS) postsActions.getRating();
+
+        if (currentStoreStatus === GET_RATING_SUCCESS) setIsLoading(false);
+
+    }, [currentStoreStatus])
+
+    let rate = {
+        likes: {
+            count: 0,
+            users: [],
+        },
+        dislikes: {
+            count: 0,
+            users: [],
+        }
     }
+    if (rating) {
+        const element = rating.find(rate => rate.id === postId);
+
+        if (element) rate = element
+    }
+
 
     function onDislike() {
         changeLikeStatus('dislike')
     }
 
+    function onLike() {
+        changeLikeStatus('like')
+    }
+
     function changeLikeStatus(status) {
+
         if (!status) {
             return;
         }
@@ -37,31 +66,37 @@ const LikePost = ({ postId, posts, currentUser, postsActions }) => {
         if (status === 'like') {
             setIsShowMessage(false);
 
-            if (post.likes.users.includes(currentUser.uid)) {
+            if (rate.likes.users.includes(currentUser.uid)) {
                 setIsShowMessage(true);
                 setMessage('You have already liked this.');
                 return;
             }
 
             function changeStatusLike() {
-                if (post.dislikes.users.includes(currentUser.uid)) {
-                    const users = post.likes.users;
+                if (rate.dislikes.users.includes(currentUser.uid)) {
+                    const users = rate.likes.users;
                     users.splice(users.indexOf(currentUser.uid), 1)
 
                     return {
                         dislikes: {
-                            count: post.dislikes.count + 1,
+                            count: rate.dislikes.count + 1,
                             users: users,
                         },
                     }
                 }
             }
 
-            return postsActions.likeCount('posts', postId,
+            setIsLoading(true)
+
+            return postsActions.ratingCount(postId,
                 {
                     likes: {
-                        count: post.likes.count + 1,
-                        users: [...post.likes.users, currentUser.uid],
+                        count: rate.likes.count + 1,
+                        users: [...rate.likes.users, currentUser.uid],
+                    },
+                    dislikes: {
+                        count: rate.dislikes.count,
+                        users: [...rate.likes.users],
                     },
                     ...changeStatusLike(),
                 }
@@ -71,36 +106,43 @@ const LikePost = ({ postId, posts, currentUser, postsActions }) => {
         if (status === 'dislike') {
             setIsShowMessage(false);
 
-            if (post.dislikes.users.includes(currentUser.uid)) {
+            if (rate.dislikes.users.includes(currentUser.uid)) {
                 setIsShowMessage(true);
                 setMessage('You have already disliked this.');
                 return;
             }
 
             function changeStatusLike() {
-                if (post.likes.users.includes(currentUser.uid)) {
-                    const users = post.likes.users;
+                if (rate.likes.users.includes(currentUser.uid)) {
+                    const users = rate.likes.users;
                     users.splice(users.indexOf(currentUser.uid), 1)
-    
+
                     return {
                         likes: {
-                            count: post.likes.count - 1,
+                            count: rate.likes.count - 1,
                             users: users,
                         },
+
                     }
                 }
             }
 
             const data = {
                 dislikes: {
-                    count: post.dislikes.count - 1,
-                    users: [...post.likes.users, currentUser.uid],
+                    count: rate.dislikes.count - 1,
+                    users: [...rate.likes.users, currentUser.uid],
+                },
+                likes: {
+                    count: rate.likes.count,
+                    users: [...rate.likes.users],
                 },
                 ...changeStatusLike(),
             }
 
-            return postsActions.likeCount('posts', postId,
-            data
+            setIsLoading(true)
+
+            return postsActions.ratingCount(postId,
+                data
             );
         }
     }
@@ -110,19 +152,20 @@ const LikePost = ({ postId, posts, currentUser, postsActions }) => {
             {isShowMessage &&
                 <InfoMessage message={message} />
             }
-
-            <div className="form-group">
-                <button
-                    type="button"
-                    className="btn border-success like"
-                    onClick={onLike}
-                >{post.likes.count}</button>
-                <button
-                    type="button"
-                    className="btn border-danger unlike"
-                    onClick={onDislike}
-                >{post.dislikes.count * -1}</button>
-            </div>
+            {!isLoading && (
+                <div className="form-group">
+                    <button
+                        type="button"
+                        className="btn border-success like"
+                        onClick={onLike}
+                    >{rate.likes.count}</button>
+                    <button
+                        type="button"
+                        className="btn border-danger unlike"
+                        onClick={onDislike}
+                    >{rate.dislikes.count * -1}</button>
+                </div>
+            ) || <div>Loading...</div>}
         </form>
     </>)
 
@@ -135,7 +178,8 @@ LikePost.propTypes = {
 
 const mapStateToProps = state => ({
     currentUser: state.user.currentUser,
-    posts: state.posts,
+    rating: state.posts.rating,
+    currentStoreStatus: state.currentStoreStatus,
 });
 
 const mapDispatchToProps = dispatch => ({

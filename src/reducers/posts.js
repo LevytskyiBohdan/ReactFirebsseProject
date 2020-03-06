@@ -8,9 +8,12 @@ import {
     EDIT_POST,
     EDIT_POST_SUCCESS,
     EDIT_POST_FAILURE,
-    LIKE_COUNT,
-    LIKE_COUNT_SUCCESS,
-    LIKE_COUNT_FAILURE,
+    RATING_COUNT,
+    RATING_COUNT_SUCCESS,
+    RATING_COUNT_FAILURE,
+    GET_RATING,
+    GET_RATING_SUCCESS,
+    GET_RATING_FAILURE,
     DELETE_POST,
     DELETE_POST_SUCCESS,
     DELETE_POST_FAILURE,
@@ -25,7 +28,7 @@ export const initialState = {
     error: null,
     collection: null,
     status: null,
-    postById: null,
+    rating: null,
 };
 
 export default createReducer(initialState, {
@@ -65,15 +68,29 @@ export default createReducer(initialState, {
     [DELETE_POST_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, };
     },
-    [LIKE_COUNT]: state => {
+    [RATING_COUNT]: state => {
         return {...state, isLoading: true, isLoaded: false, error: null, };
     },
-    [LIKE_COUNT_SUCCESS]: (state) => {
+    [RATING_COUNT_SUCCESS]: (state) => {
         return {...state, isLoading: false, isLoaded: true, };
     },
-    [LIKE_COUNT_FAILURE]: (state, err) => {
+    [RATING_COUNT_FAILURE]: (state, err) => {
         return {...state, isLoading: false, error: err, };
     },
+
+
+    [GET_RATING]: state => {
+        return {...state, isLoading: true, isLoaded: false, error: null, };
+    },
+    [GET_RATING_SUCCESS]: (state, payload) => {
+        return {...state, rating: payload, isLoading: false, isLoaded: true, };
+    },
+    [GET_RATING_FAILURE]: (state, err) => {
+        return {...state, isLoading: false, error: err, };
+    },
+
+
+
     [CLEAR_ALL_ERROR]: (state) => {
         return { ...state, error: null, };
     },

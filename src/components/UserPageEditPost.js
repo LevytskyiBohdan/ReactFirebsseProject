@@ -10,8 +10,8 @@ import InfoMessage from './InfoMessage';
 import FileUploader from './FileUploader';
 import { EDIT_POST_SUCCESS, GET_POST_SUCCESS, EDIT_POST_FAILURE } from '../constants/index';
 
-const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions, postId, chosenFiles, fileUploadActions }) => {
-    const [title, setTitle] = React.useState();
+const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions, postId, chosenFiles, fileUploadActions, history }) => {
+    const [title, setTitle] = React.useState('');
     const [article, setArticle] = React.useState('');
     const [publish, setPublish] = React.useState('');
     const [isCreating, setIsCreating] = React.useState(false);
@@ -23,7 +23,7 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
 
     React.useEffect(() => {
         if (currentStoreStatus === EDIT_POST_SUCCESS) {
-            window.location = '/user/myPosts'
+            history.push('/user/myPosts');
             fileUploadActions.clearFileUploader();
             setIsCreating(false);
             setIsMessage(true);
@@ -55,6 +55,16 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
 
     }
 
+    function onFieldChange(evt) {
+        const { name, value } = evt.target;
+
+        if (name === 'article') {
+            setArticle(value)
+        } else if (name === 'title') {
+            setTitle(value)
+        }
+    }
+
     return (
         <div className="container">
             <div className="row">
@@ -69,21 +79,23 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
                                 <div className="form-group">
                                     <label htmlFor="title">Title</label>
                                     <input
+                                    name="title"
                                         type="text"
                                         className="form-control"
                                         id="title"
                                         value={title}
-                                        onChange={evt => { setTitle(evt.target.value) }}
+                                        onChange={onFieldChange}
                                     />
                                 </div>
 
                                 <div className="mb-3">
                                     <label htmlFor="validationTextarea">Article</label>
                                     <textarea
+                                        name='article'
                                         className="form-control"
                                         placeholder="text..."
                                         value={article}
-                                        onChange={evt => { setArticle(evt.target.value) }}
+                                        onChange={onFieldChange}
                                         style={{ height: "35vh" }}
                                     ></textarea>
 
@@ -111,7 +123,7 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
                                         type="button"
                                         className="btn btn-block mt-3 btn-success"
                                         disabled={isCreating}
-                                        onClick={() => { onSubmit() }}
+                                        onClick={onSubmit}
                                     >Save</button>
                                 </div>
                             </form>
@@ -127,6 +139,7 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
 }
 
 const mapStateToProps = (state, ownProps) => ({
+    history: ownProps.history,
     currentStoreStatus: state.currentStoreStatus,
     postId: ownProps.match.params.id,
     post: state.post,

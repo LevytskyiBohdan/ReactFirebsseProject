@@ -47,14 +47,6 @@ const UserPageCreatePost = ({currentStoreStatus, user, postsActions, chosenFiles
             img: chosenFiles,
             article: article,
             publish: publish,
-            likes: {
-                count: 0,
-                users: [],
-            },
-            dislikes: {
-                count: 0,
-                users: [],
-            }
         }
 
         postsActions.createPost('posts', date);

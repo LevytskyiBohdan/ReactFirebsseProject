@@ -8,15 +8,18 @@ import {
     EDIT_POST,
     EDIT_POST_SUCCESS,
     EDIT_POST_FAILURE,
-    LIKE_COUNT,
-    LIKE_COUNT_SUCCESS,
-    LIKE_COUNT_FAILURE,
     DELETE_POST,
     DELETE_POST_SUCCESS,
     DELETE_POST_FAILURE,
+    RATING_COUNT,
+    RATING_COUNT_SUCCESS,
+    RATING_COUNT_FAILURE,
+    GET_RATING,
+    GET_RATING_SUCCESS,
+    GET_RATING_FAILURE,
 } from '../constants';
 
-import { editById, createDocument, deleteById, getCollectionWithQuery } from '../utils/firebaseDB';
+import { editById, createDocument, deleteById, getCollectionWithQuery, getCollection } from '../utils/firebaseDB';
 
 const getPostsAction = () => ({ type: GET_POSTS });
 const getPostsSuccessAction = response => ({ type: GET_POSTS_SUCCESS, payload: response });
@@ -86,25 +89,37 @@ export function deletePost(collection, id) {
     }
 }
 
-const likeCountAction = () => ({ type: LIKE_COUNT });
-const likeCountSuccessAction = response => ({ type: LIKE_COUNT_SUCCESS, payload: response });
-const likeCountErrorAction = err => ({ type: LIKE_COUNT_FAILURE, payload: err });
+const ratingCountAction = () => ({ type: RATING_COUNT });
+const ratingCountSuccessAction = response => ({ type: RATING_COUNT_SUCCESS, payload: response });
+const ratingCountErrorAction = err => ({ type: RATING_COUNT_FAILURE, payload: err });
 
-export function likeCount(collection, id, data) {
+export function ratingCount(id, data) {
     return dispatch => {
-        dispatch(likeCountAction());
-        editById(collection, id, data)
-        .then(response => {
-            dispatch(likeCountSuccessAction(response));
-            dispatch(getPosts('posts', {
-                name: 'publish',
-                symbol: '==',
-                equal: true,
-            }));
+        dispatch(ratingCountAction());
+        editById('rating', id, data)
+        .then(() => {
+            dispatch(ratingCountSuccessAction());
         }).catch(err => {
-            dispatch(likeCountErrorAction(err));
+            dispatch(ratingCountErrorAction(err));
         });
 
     }
 }
 
+const getRatingAction = () => ({ type: GET_RATING });
+const getRatingSuccessAction = response => ({ type: GET_RATING_SUCCESS, payload: response });
+const getRatingErrorAction = err => ({ type: GET_RATING_FAILURE, payload: err });
+
+export function getRating() {
+    return dispatch => {
+        dispatch(getRatingAction());
+        getCollection('rating')
+        .then(response => {
+            console.log(response)
+            dispatch(getRatingSuccessAction(response));
+        }).catch(err => {
+            dispatch(getRatingErrorAction(err));
+        });
+
+    }
+}
