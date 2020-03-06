@@ -57,7 +57,7 @@ const registerAction = reduxLoaderActions.registerLoader({
     ],
 });
 
-const Loader = ({children, loaderAction, loader}) => {
+const Loader = ({state, children, loaderAction, loader}) => {
     React.useEffect(() => {
         loaderAction()
     }, [])
@@ -81,6 +81,7 @@ const Loader = ({children, loaderAction, loader}) => {
 }
 
 const mapStateToProps = state => ({
+    state,
     loader: state.reduxLoader.loaders.loader,
 });
 

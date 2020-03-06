@@ -50,6 +50,10 @@ const UserPageCreatePost = ({currentStoreStatus, user, postsActions, chosenFiles
             likes: {
                 count: 0,
                 users: [],
+            },
+            dislikes: {
+                count: 0,
+                users: [],
             }
         }
 

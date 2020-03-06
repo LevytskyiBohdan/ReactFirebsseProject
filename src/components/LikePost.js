@@ -9,109 +9,123 @@ import * as postActions from '../actions/post';
 import InfoMessage from './InfoMessage';
 import '../css/LikePost.css';
 
-class LikePost extends React.Component {
-    constructor(props) {
-        super(props);
+const LikePost = ({ postId, posts, currentUser, postsActions }) => {
+    const [isShowMessage, setIsShowMessage] = React.useState();
+    const [message, setMessage] = React.useState();
 
-        this.state = {
-            isShowMessage: false,
-            message: ''
-        }
+    const post = posts.collection.find(post => post.id === postId)
 
-        this.query = {
-            name: 'publish',
-            symbol: '==',
-            equal: true,
-        }
-
-        this.onLike = this.onLike.bind(this);
-        this.onDislike = this.onDislike.bind(this);
-        this.changeLikeStatus = this.changeLikeStatus.bind(this);
+    function onLike() {
+        changeLikeStatus('like')
     }
 
-    onLike() {
-        this.changeLikeStatus('like')
+    function onDislike() {
+        changeLikeStatus('dislike')
     }
 
-    onDislike() {
-        this.changeLikeStatus('dislike')
-    }
-
-    changeLikeStatus(status) {
-        const {
-            currentUser,
-            likes: likesList,
-            postId,
-        } = this.props;
-
-        if(!status) {
+    function changeLikeStatus(status) {
+        if (!status) {
             return;
-        } 
+        }
 
         if (!currentUser) {
-            this.setState({
-                isShowMessage: true,
-                message: 'You should be authorized.'
-            })
-
+            setIsShowMessage(true);
+            setMessage('You should be authorized.');
             return;
         }
 
-        if (likesList.users.includes(currentUser.uid)) {
-            this.setState({
-                isShowMessage: true,
-                message: 'You have already liked this.',
-            })
-            return;
-        }
+        if (status === 'like') {
+            setIsShowMessage(false);
 
-        if(status === 'like') {
-            return this.props.postsActions.likeCount('posts', postId,
-                {
-                    likes: {
-                        count: likesList.count + 1,
-                        users: [...likesList.users, currentUser.uid],
-                    },
-                }
-            );
-        }
+            if (post.likes.users.includes(currentUser.uid)) {
+                setIsShowMessage(true);
+                setMessage('You have already liked this.');
+                return;
+            }
 
-        if(status === 'dislike') {
-            return this.props.postsActions.likeCount('posts', postId,
-                {
-                    likes: {
-                        count: likesList.count - 1,
-                        users: [...likesList.users, currentUser.uid],
+            function changeStatusLike() {
+                if (post.dislikes.users.includes(currentUser.uid)) {
+                    const users = post.likes.users;
+                    users.splice(users.indexOf(currentUser.uid), 1)
+
+                    return {
+                        dislikes: {
+                            count: post.dislikes.count + 1,
+                            users: users,
+                        },
                     }
                 }
+            }
+
+            return postsActions.likeCount('posts', postId,
+                {
+                    likes: {
+                        count: post.likes.count + 1,
+                        users: [...post.likes.users, currentUser.uid],
+                    },
+                    ...changeStatusLike(),
+                }
+            );
+        }
+
+        if (status === 'dislike') {
+            setIsShowMessage(false);
+
+            if (post.dislikes.users.includes(currentUser.uid)) {
+                setIsShowMessage(true);
+                setMessage('You have already disliked this.');
+                return;
+            }
+
+            function changeStatusLike() {
+                if (post.likes.users.includes(currentUser.uid)) {
+                    const users = post.likes.users;
+                    users.splice(users.indexOf(currentUser.uid), 1)
+    
+                    return {
+                        likes: {
+                            count: post.likes.count - 1,
+                            users: users,
+                        },
+                    }
+                }
+            }
+
+            const data = {
+                dislikes: {
+                    count: post.dislikes.count - 1,
+                    users: [...post.likes.users, currentUser.uid],
+                },
+                ...changeStatusLike(),
+            }
+
+            return postsActions.likeCount('posts', postId,
+            data
             );
         }
     }
 
-    render() {
-        return (<>
-            <form className="likeBlock">
-                {this.state.isShowMessage &&
-                    <InfoMessage message={this.state.message} />
-                }
+    return (<>
+        <form className="likeBlock">
+            {isShowMessage &&
+                <InfoMessage message={message} />
+            }
 
-                <div className="form-group">
-                    <button
-                        type="button"
-                        className="btn btn-primary like"
-                        onClick={this.onLike}
-                    ></button>
-                    <button
-                        type="button"
-                        className="btn btn-primary unlike"
-                        onClick={this.onDislike}
-                    ></button>
-                    
-                    <h6 className="text-muted mt-3">{this.props.likes.count} likes</h6>
-                </div>
-            </form>
-        </>)
-    }
+            <div className="form-group">
+                <button
+                    type="button"
+                    className="btn border-success like"
+                    onClick={onLike}
+                >{post.likes.count}</button>
+                <button
+                    type="button"
+                    className="btn border-danger unlike"
+                    onClick={onDislike}
+                >{post.dislikes.count * -1}</button>
+            </div>
+        </form>
+    </>)
+
 }
 
 LikePost.propTypes = {
@@ -121,7 +135,6 @@ LikePost.propTypes = {
 
 const mapStateToProps = state => ({
     currentUser: state.user.currentUser,
-    postById: state.post.postById,
     posts: state.posts,
 });
 
