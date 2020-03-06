@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import * as postsActions from '../actions/posts';
 import * as postActions from '../actions/post';
 import InfoMessage from './InfoMessage';
-import { RATING_COUNT_SUCCESS, GET_RATING_SUCCESS, RATING_COUNT } from '../constants'
+import { RATING_COUNT_SUCCESS, GET_RATING_SUCCESS } from '../constants'
 import '../css/LikePost.css';
 
 const LikePost = ({ postId, rating, currentUser, postsActions, currentStoreStatus }) => {
