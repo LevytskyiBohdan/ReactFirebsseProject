@@ -10,16 +10,20 @@ const loaderMiddleware = reduxLoaderMiddleware();
 
 export const history = createBrowserHistory()
 
+const middleware = [
+  thunk,
+  loaderMiddleware,
+]
+
+if (process.env.NODE_ENV === 'development') middleware.push(logger);
+
 export default function configureStore(preloadedState) {
   const store = createStore(
     createRootReducer, // root reducer with router state
     preloadedState,
     compose(
       applyMiddleware(
-        thunk,
-        loaderMiddleware,
-        logger
-        // ... other middlewares ...
+        ...middleware
       ),
     ),
   )
