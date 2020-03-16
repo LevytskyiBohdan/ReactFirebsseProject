@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { push } from 'connected-react-router';
 import * as modalActions from '../actions/modal';
 import * as userActions from '../actions/user';
 import ErrorMessage from './ErrorMessage';
@@ -10,14 +9,13 @@ import ErrorMessage from './ErrorMessage';
 const ConfirmDeleteUser = (props) => {
     const [email, setEmail] = React.useState(null);
     const [password, setPassword] = React.useState(null);
-
+    // console.log(props)
     const mounted = React.useRef();
 
     React.useEffect(() => {
         if (!mounted.current) {
             mounted.current = true;
           } else {
-            props.push('/');
             props.modalActions.hideModal();
           }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,12 +60,10 @@ const ConfirmDeleteUser = (props) => {
 }
 
 const mapStateToProps = state => ({
-    collection: state.posts.collection,
     user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({
-    push: path => dispatch(push(path)),
     modalActions: bindActionCreators(modalActions, dispatch),
     userActions: bindActionCreators(userActions, dispatch),
 });
