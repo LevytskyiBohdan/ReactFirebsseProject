@@ -11,9 +11,10 @@ const getPostSuccessAction = response => ({ type: GET_POST_SUCCESS, payload: res
 const getPostErrorAction = err => ({ type: GET_POST_FAILURE, payload: err });
 
 export function getPost(collection, id) {
+    // return {type: "Post>>>"}
     return dispatch => {
         dispatch(getPostAction());
-        getById(collection, id)
+        return getById(collection, id)
         .then(response => {
             dispatch(getPostSuccessAction(response));
         }).catch(err => {
