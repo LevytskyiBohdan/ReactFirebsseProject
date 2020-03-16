@@ -28,7 +28,7 @@ const getPostsErrorAction = err => ({ type: GET_POSTS_FAILURE, payload: err });
 export function getPosts(collection, query) {
     return dispatch => {
         dispatch(getPostsAction());
-        getCollectionWithQuery(collection, query)
+        return getCollectionWithQuery(collection, query)
         .then(response => {
             dispatch(getPostsSuccessAction(response));
         }).catch(err => {
@@ -45,7 +45,7 @@ const createPostErrorAction = err => ({ type: CREATE_POST_FAILURE, payload: err 
 export function createPost(collection, date) {
     return dispatch => {
         dispatch(createPostAction());
-        createDocument(collection, date)
+        return createDocument(collection, date)
         .then(() => {
             dispatch(createPostSuccessAction());
         }).catch(err => {
@@ -62,7 +62,7 @@ const editPostErrorAction = err => ({ type: EDIT_POST_FAILURE, payload: err });
 export function editPost(collection, id, data) {
     return dispatch => {
         dispatch(editPostAction());
-        editById(collection, id, data)
+        return editById(collection, id, data)
         .then(() => {
             dispatch(editPostSuccessAction());
         }).catch(err => {
@@ -79,7 +79,7 @@ const deletePostErrorAction = err => ({ type: DELETE_POST_FAILURE, payload: err 
 export function deletePost(collection, id) {
     return dispatch => {
         dispatch(deletePostAction());
-        deleteById(collection, id)
+        return deleteById(collection, id)
         .then(() => {
             dispatch(deletePostSuccessAction());
         }).catch(err => {
@@ -96,7 +96,7 @@ const ratingCountErrorAction = err => ({ type: RATING_COUNT_FAILURE, payload: er
 export function ratingCount(id, data) {
     return dispatch => {
         dispatch(ratingCountAction());
-        editById('rating', id, data)
+        return editById('rating', id, data)
         .then(() => {
             dispatch(ratingCountSuccessAction());
         }).catch(err => {
@@ -113,9 +113,8 @@ const getRatingErrorAction = err => ({ type: GET_RATING_FAILURE, payload: err })
 export function getRating() {
     return dispatch => {
         dispatch(getRatingAction());
-        getCollection('rating')
+        return getCollection('rating')
         .then(response => {
-            console.log(response)
             dispatch(getRatingSuccessAction(response));
         }).catch(err => {
             dispatch(getRatingErrorAction(err));
