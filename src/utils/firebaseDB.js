@@ -41,10 +41,10 @@ export function getById(collection, id) {
     return new Promise((resolve, reject) => {
         db.collection(collection).doc(id)
             .get().then(function (doc) {
-                if (doc) {
+                if (doc.data()) {
                     return resolve(doc.data());
                 } else {
-                    return reject("No such document!")
+                    return resolve({})
                 }
             }).catch(function (error) {
                 return reject("Error getting document:", error)

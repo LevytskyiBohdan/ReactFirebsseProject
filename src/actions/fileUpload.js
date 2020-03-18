@@ -15,10 +15,10 @@ const fileUploadAction = () => ({ type: FILE_UPLOAD });
 const fileUploadSuccessAction = response => ({ type: FILE_UPLOAD_SUCCESS, payload: response });
 const fileUploadErrorAction = err => ({ type: FILE_UPLOAD_FAILURE, payload: err });
 
-export function fileUpload(files, path, userUid) {
+export function fileUpload(files, path) {
     return dispatch => {
         dispatch(fileUploadAction());
-        firebaseFileUpload(files, path)
+        return firebaseFileUpload(files, path)
             .then(response => {
                 dispatch(fileUploadSuccessAction(response));
             }).catch(err => {
@@ -35,7 +35,7 @@ const getUploadedFilesErrorAction = err => ({ type: GET_UPLOADED_FILES_FAILURE, 
 export function getUploadedFiles(userUid) {
     return dispatch => {
         dispatch(getUploadedFilesAction());
-        firebaseGetUploadedFiles(`usersUploadedFiles/${userUid}`)
+        return firebaseGetUploadedFiles(`usersUploadedFiles/${userUid}`)
             .then(response => {
                 dispatch(getUploadedFilesSuccessAction(response));
             }).catch(err => {

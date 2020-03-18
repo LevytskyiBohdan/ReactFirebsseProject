@@ -35,73 +35,72 @@ export const initialState = {
     error: null,
     currentUser: null,
     userPosts:null,
-    status: null,
     users: null,
 };
 
 export default createReducer(initialState, {
     [USER_LOGIN]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null,};
     },
     [USER_LOGIN_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true, status: USER_LOGIN_SUCCESS, };
+        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true,};
     },
     [USER_LOGIN_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: USER_LOGIN_FAILURE,};
+        return {...state, isLoading: false, error: err,};
     },
     [USER_LOGOUT]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null,};
     },
-    [USER_LOGOUT_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: null, isLoading: false, isLoaded: true,  status: USER_LOGOUT_SUCCESS, };
+    [USER_LOGOUT_SUCCESS]: (state) => {
+        return {...state, currentUser: null, isLoading: false, isLoaded: true,};
     },
     [USER_LOGOUT_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: USER_LOGOUT_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [GET_USER]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null, };
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
     [GET_USER_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true, status: GET_USER_SUCCESS,};
+        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true, };
     },
     [GET_USER_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: GET_USER_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [CREATE_USER]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null, };
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
     [CREATE_USER_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: { ...payload.user }, isLoading: false, isLoaded: true, status: CREATE_USER_SUCCESS, };
+        return {...state, currentUser: { ...payload.user }, isLoading: false, isLoaded: true, };
     },
     [CREATE_USER_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: CREATE_USER_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [EDIT_USER]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
     [EDIT_USER_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true, status: EDIT_USER_SUCCESS, };
+        return {...state, currentUser: { ...payload }, isLoading: false, isLoaded: true, };
     },
     [EDIT_USER_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: EDIT_USER_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [DELETE_USER]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
-    [DELETE_USER_SUCCESS]: (state, payload) => {
-        return {...state, currentUser: payload, isLoading: false, isLoaded: true, status: DELETE_USER_SUCCESS, };
+    [DELETE_USER_SUCCESS]: state => {
+        return {...state, isLoading: false, isLoaded: true, };
     },
     [DELETE_USER_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: DELETE_USER_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [GET_USER_POSTS]: state => {
-        return {...state, isLoading: true, isLoaded: false, error: null, status: null,};
+        return {...state, isLoading: true, isLoaded: false, error: null, };
     },
     [GET_USER_POSTS_SUCCESS]: (state, payload) => {
-        return {...state, userPosts: payload, isLoading: false, isLoaded: true, status: GET_USER_POSTS_SUCCESS, };
+        return {...state, userPosts: payload, isLoading: false, isLoaded: true, };
     },
     [GET_USER_POSTS_FAILURE]: (state, err) => {
-        return {...state, isLoading: false, error: err, status: GET_USER_POSTS_FAILURE, };
+        return {...state, isLoading: false, error: err, };
     },
     [CREAR_USER_ERROR]: (state, err) => {
         return {...state, error: null, };

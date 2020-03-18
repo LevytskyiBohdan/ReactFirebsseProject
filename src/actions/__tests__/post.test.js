@@ -29,7 +29,7 @@ it('test getPostSaccess', () => {
 
             expect(actions[0].type).toEqual(GET_POST);
             expect(actions[1].type).toEqual(GET_POST_SUCCESS);
-            expect(actions[1].payload).toEqual({ test1: 'test_value_1' });
+            expect(actions[1].payload).toEqual({});
         })
 
 })

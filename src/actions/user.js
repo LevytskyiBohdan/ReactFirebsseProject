@@ -34,7 +34,7 @@ const userLoginErrorAction = err => ({ type: USER_LOGIN_FAILURE, payload: err })
 export function userLogin(email, password) {
     return dispatch => {
         dispatch(userLoginAction());
-        firebaseAuth(email, password)
+        return firebaseAuth(email, password)
             .then(() => firebaseGetCurrentUser())
             .then(response => {
                 dispatch(userLogedAction(response));
@@ -53,7 +53,7 @@ const userLogoutErrorAction = err => ({ type: USER_LOGOUT_FAILURE, payload: err 
 export function userLogout(data) {
     return dispatch => {
         dispatch(userLogoutAction());
-        firebaseAuthLogout(data)
+        return firebaseAuthLogout(data)
             .then(response => {
                 dispatch(userLogoutedAction(response));
             }).catch(err => {
@@ -70,7 +70,7 @@ const getUserError = err => ({ type: GET_USER_FAILURE, payload: err });
 export function getCurrentUser() {
     return dispatch => {
         dispatch(getUser());
-        firebaseGetCurrentUser()
+        return firebaseGetCurrentUser()
             .then(response => {
                 dispatch(getUserSuccess(response));
             }).catch(err => {
@@ -87,7 +87,7 @@ const createUserError = err => ({ type: CREATE_USER_FAILURE, payload: err });
 export function createUser(email, password) {
     return dispatch => {
         dispatch(createUserReq());
-        firebaseCreateUser(email, password)
+        return firebaseCreateUser(email, password)
             .then(response => {
                 dispatch(createUserSuccess(response));
             }).catch(err => {
@@ -103,7 +103,7 @@ const editUserError = err => ({ type: EDIT_USER_FAILURE, payload: err });
 export function editUser(userUid, data) {
     return dispatch => {
         dispatch(editUserReq());
-        firebaseEditUser(data)
+        return firebaseEditUser(data)
             .then(() => {
                 if (userUid) {
                     return fetch('https://us-central1-react-firebase-project-f71c4.cloudfunctions.net/changePostsAutor', {
@@ -129,15 +129,15 @@ export function editUser(userUid, data) {
 }
 
 const deleteUserReq = () => ({ type: DELETE_USER });
-const deleteUserSuccess = response => ({ type: DELETE_USER_SUCCESS, payload: response });
+const deleteUserSuccess = () => ({ type: DELETE_USER_SUCCESS});
 const deleteUserError = err => ({ type: DELETE_USER_FAILURE, payload: err });
 
 export function deleteUser(email, password) {
     return dispatch => {
         dispatch(deleteUserReq());
-        firebaseDeleteUser(email, password)
+        return firebaseDeleteUser(email, password)
             .then(() => {
-                dispatch(deleteUserSuccess(null));
+                dispatch(deleteUserSuccess());
             }).catch(err => {
                 dispatch(deleteUserError(err));
             });
@@ -151,7 +151,7 @@ const getUserPostsError = err => ({ type: GET_USER_POSTS_FAILURE, payload: err }
 export function getUserPosts(collection, query) {
     return dispatch => {
         dispatch(getUserPostsReq());
-        getCollectionWithQuery(collection, query)
+        return getCollectionWithQuery(collection, query)
             .then(response => {
                 dispatch(getUserPostsSuccess(response));
             }).catch(err => {

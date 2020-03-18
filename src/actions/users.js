@@ -13,7 +13,7 @@ export function getUsers() {
 
     return dispatch => {
         dispatch(getUsersAction());
-        fetch('https://us-central1-react-firebase-project-f71c4.cloudfunctions.net/api')
+        return fetch('https://us-central1-react-firebase-project-f71c4.cloudfunctions.net/api')
             .then((response) => response.json())
             .then(response => {
                 dispatch(getUsersSuccess(response));
