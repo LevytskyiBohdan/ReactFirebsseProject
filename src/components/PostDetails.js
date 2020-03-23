@@ -6,19 +6,13 @@ import * as usersActions from '../actions/users';
 import { bindActionCreators } from 'redux';
 import '../css/postDetails.css';
 
-const setAuthor = (uid, users) => {
-    return users.map(user => {
-        return user.uid === uid ? user.displayName : null;
-    })
-}
-
-const PostDetails = ({ post, user, postActions, usersActions, users, match: { params: { id: postId } } }) => {
+const PostDetails = ({ post, user, postActions, usersActions, match: { params: { id: postId } } }) => {
     React.useEffect(() => {
         usersActions.getUsers()
         postActions.getPost("posts", postId)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postId])
-    console.log(post)
+
     return (post &&
         <>
 
@@ -64,7 +58,6 @@ const PostDetails = ({ post, user, postActions, usersActions, users, match: { pa
 const mapStateToProps = state => ({
     post: state.post.postById,
     user: state.user,
-    users: state.users.users,
 });
 
 const mapDispatchToProps = dispatch => ({
