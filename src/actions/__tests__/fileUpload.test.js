@@ -22,7 +22,7 @@ it('test fileUploadSuccess', () => {
     return store.dispatch(fileUpload.fileUpload([file], 'usersUploadedFiles/test'))
         .then(() => {
             const actions = store.getActions();
-
+            console.log(actions[1])
             expect(actions[0].type).toEqual(FILE_UPLOAD);
             expect(actions[1].type).toEqual(FILE_UPLOAD_SUCCESS);
         })
