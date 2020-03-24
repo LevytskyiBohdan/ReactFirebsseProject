@@ -89,8 +89,9 @@ const UserPageEditPost = ({ currentStoreStatus, post, postActions, postsActions,
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="validationTextarea">Article</label>
+                                    <label htmlFor="article">Article</label>
                                     <textarea
+                                        id="article"
                                         name='article'
                                         className="form-control"
                                         placeholder="text..."
@@ -144,7 +145,6 @@ const mapStateToProps = (state, ownProps) => ({
     postId: ownProps.match.params.id,
     post: state.post,
     user: state.user.currentUser,
-    posts: state.posts,
     chosenFiles: state.fileUpload.chosenFiles,
 });
 

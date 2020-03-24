@@ -16,7 +16,7 @@ const UserPageMyPosts = ({currentStoreStatus, posts, user, userPosts, isLoaded, 
         symbol: '==',
         equal: user.uid,
     }
-
+    console.log(JSON.stringify(userPosts))
     React.useEffect(() => {
         userActions.getUserPosts('posts', query);
     }, [])

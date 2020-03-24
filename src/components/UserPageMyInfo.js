@@ -9,9 +9,9 @@ import UserEditForm from './UserEditForm';
 
 const UserPageMyInfo = ({ userActions, modalActions, user }) => {
     React.useEffect(() => {
-       userActions.getCurrentUser();
+        userActions.getCurrentUser();
     }, [])
-
+console.log(user)
     return (
         <div className="row">
             <div className="col-6">
@@ -46,7 +46,6 @@ const UserPageMyInfo = ({ userActions, modalActions, user }) => {
 
 const mapStateToProps = state => ({
     user: state.user.currentUser,
-    articles: state.posts.collection,
 });
 
 const mapDispatchToProps = dispatch => ({

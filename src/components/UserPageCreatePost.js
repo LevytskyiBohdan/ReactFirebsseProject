@@ -71,8 +71,9 @@ const UserPageCreatePost = ({currentStoreStatus, user, postsActions, chosenFiles
             </div>
 
             <div className="mb-3">
-                <label htmlFor="validationTextarea">Article</label>
+                <label htmlFor="article">Article</label>
                 <textarea
+                    id="article"
                     className="form-control"
                     placeholder="text..."
                     value={article}
